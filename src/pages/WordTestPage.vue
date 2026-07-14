@@ -1,60 +1,30 @@
 <template>
   <PageShell title="Проверка слов" back-to="/words">
-    <template v-if="phase === 'result'">
-      <div :class="styles.result">
-        <BunnyMascot size="md" :mood="passed ? 'cheer' : 'idle'" />
-        <h2 :class="styles.resultTitle">
-          {{ passed ? "Раздел сдан!" : "Есть ошибки" }}
-        </h2>
-        <p :class="styles.resultText">
-          {{
-            passed
-              ? "Ты верно ответил на все вопросы."
-              : `Ошибок: ${errors}. Давай повторим материал.`
-          }}
-        </p>
-        <div :class="styles.resultActions">
-          <BigButton
-            v-if="passed"
-            variant="mint"
-            size="lg"
-            full-width
-            @click="router.push('/')"
-          >
-            На главную
-          </BigButton>
-          <BigButton
-            v-else
-            variant="peach"
-            size="lg"
-            full-width
-            @click="router.push('/words')"
-          >
-            Повторить материал
-          </BigButton>
-        </div>
-      </div>
-    </template>
+    <SectionResult
+      v-if="phase === 'result'"
+      :passed="passed"
+      :errors="errors"
+      fail-back-to="/words"
+    />
 
     <template v-else>
       <div :class="styles.prompt">
         <BunnyMascot
           size="sm"
-          :mood="feedback === 'correct' ? 'cheer' : 'idle'"
+          :mood="
+            feedback === 'correct'
+              ? 'cheer'
+              : feedback === 'wrong'
+                ? 'sad'
+                : 'think'
+          "
         />
-        <div :class="learnStyles.cardWrap" style="max-width: 200px">
-          <div
-            :class="learnStyles.wordCard"
-            style="min-height: 140px; cursor: default"
-          >
+        <p :class="styles.question">Что изображено на картинке?</p>
+        <div :class="learnStyles.promptCard">
+          <div :class="[learnStyles.wordCard, learnStyles.promptWord]">
             <span :class="learnStyles.emoji" aria-hidden="true">
               {{ target?.emoji }}
             </span>
-            <StarBurst
-              v-if="burst"
-              :show="burst"
-              @done="burst = false"
-            />
           </div>
         </div>
         <BigButton variant="ghost" @click="ask">🔊 Подсказка</BigButton>
@@ -86,11 +56,10 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import BigButton from "../components/BigButton.vue";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import PageShell from "../components/PageShell.vue";
-import StarBurst from "../components/StarBurst.vue";
+import SectionResult from "../components/SectionResult.vue";
 import type { Word } from "../data/words";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
@@ -100,7 +69,6 @@ import { playSuccess } from "../lib/sounds";
 import styles from "./Quiz.module.css";
 import learnStyles from "./Learn.module.css";
 
-const router = useRouter();
 const { words } = useLevelContent();
 const { passSection } = useProgress();
 
@@ -110,7 +78,6 @@ const {
   feedback,
   errors,
   phase,
-  burst,
   passed,
   counterLabel,
   ask,
@@ -120,8 +87,8 @@ const {
   pool: () => words.value,
   getKey: (word) => word.text,
   choiceCount: 3,
-  onAsk: (word) => {
-    speakRussian(`Какое это слово? ${word.hint}`);
+  onAsk: () => {
+    speakRussian("Что изображено на картинке?");
   },
   onFinish: (didPass) => {
     if (didPass) {

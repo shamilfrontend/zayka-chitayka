@@ -1,17 +1,17 @@
 import { computed } from "vue";
-import { getLettersForLevel } from "../data/letters";
-import { getSyllablesForLevel } from "../data/syllables";
-import { getWordsForLevel } from "../data/words";
+import { LETTERS } from "../data/letters";
+import { INTRO_SYLLABLES } from "../data/syllables";
+import { WORDS } from "../data/words";
 import { isSectionPassed } from "../lib/progress";
 import { useProgress } from "./useProgress";
 
-/** Контент букв / слогов / слов для активного уровня */
+/** Контент букв / слогов / слов для обучения */
 export function useLevelContent() {
   const { progress } = useProgress();
 
-  const letters = computed(() => getLettersForLevel(progress.value.level));
-  const syllables = computed(() => getSyllablesForLevel(progress.value.level));
-  const words = computed(() => getWordsForLevel(progress.value.level));
+  const letters = computed(() => LETTERS);
+  const syllables = computed(() => INTRO_SYLLABLES);
+  const words = computed(() => WORDS);
 
   const lettersDone = computed(
     () =>
@@ -35,26 +35,16 @@ export function useLevelContent() {
   );
 
   const lettersPassed = computed(() =>
-    isSectionPassed(progress.value, progress.value.level, "letters"),
+    isSectionPassed(progress.value, "letters"),
   );
 
   const syllablesPassed = computed(() =>
-    isSectionPassed(progress.value, progress.value.level, "syllables"),
+    isSectionPassed(progress.value, "syllables"),
   );
 
-  const wordsPassed = computed(() =>
-    isSectionPassed(progress.value, progress.value.level, "words"),
-  );
-
-  const sectionsPassedCount = computed(
-    () =>
-      Number(lettersPassed.value) +
-      Number(syllablesPassed.value) +
-      Number(wordsPassed.value),
-  );
+  const wordsPassed = computed(() => isSectionPassed(progress.value, "words"));
 
   return {
-    level: computed(() => progress.value.level),
     letters,
     syllables,
     words,
@@ -64,6 +54,5 @@ export function useLevelContent() {
     lettersPassed,
     syllablesPassed,
     wordsPassed,
-    sectionsPassedCount,
   };
 }

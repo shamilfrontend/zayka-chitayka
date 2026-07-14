@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  animation: float 3.2s ease-in-out infinite;
+  transform-origin: center bottom;
 }
 
 .svg {
@@ -27,6 +27,7 @@
 .body,
 .earLeft,
 .earRight,
+.arm,
 .foot,
 .tail {
   fill: #f5ebe0;
@@ -37,13 +38,11 @@
 
 .body {
   transform-origin: 60px 100px;
-  animation: breathe 3.6s ease-in-out infinite;
 }
 
 .belly {
   fill: #fff8f0;
   transform-origin: 60px 105px;
-  animation: breathe 3.6s ease-in-out infinite;
 }
 
 .earInnerLeft,
@@ -57,32 +56,136 @@
   fill: #3d3a4a;
   transform-box: fill-box;
   transform-origin: center;
-  animation: blink 4.8s ease-in-out infinite;
 }
 
 .eyeShine {
   fill: #fff8f0;
   transform-box: fill-box;
   transform-origin: center;
+}
+
+.eyeSad,
+.mouth {
+  stroke: #3d3a4a;
+  fill: none;
+}
+
+.face {
+  transform-origin: 60px 62px;
+}
+
+.earLeftGroup {
+  transform-origin: 40px 48px;
+}
+
+.earRightGroup {
+  transform-origin: 80px 48px;
+}
+
+.armLeftGroup {
+  transform-origin: 34px 94px;
+}
+
+.armRightGroup {
+  transform-origin: 86px 94px;
+}
+
+/* Book */
+.book {
+  transform-origin: 60px 108px;
+}
+
+.bookCover {
+  fill: var(--color-mint);
+  stroke: var(--color-mint-dark);
+  stroke-width: 1.5;
+}
+
+.bookPage {
+  fill: var(--color-cream);
+  stroke: #e8d9c8;
+  stroke-width: 1;
+}
+
+.bookSpine {
+  stroke: var(--color-mint-dark);
+  stroke-width: 1.5;
+}
+
+/* —— Idle —— */
+.idle {
+  animation: float 3.2s ease-in-out infinite;
+}
+
+.idle .body,
+.idle .belly {
+  animation: breathe 3.6s ease-in-out infinite;
+}
+
+.idle .eye,
+.idle .eyeShine {
   animation: blink 4.8s ease-in-out infinite;
 }
 
-.mouth {
-  stroke: #3d3a4a;
+.idle .earLeftGroup {
+  animation: earTwitchLeft 5.5s ease-in-out infinite;
 }
 
-.happy {
-  animation: bounceHappy 0.7s var(--ease-bounce);
+.idle .earRightGroup {
+  animation: earTwitchRight 5.5s ease-in-out infinite 0.4s;
 }
 
+.idle .book {
+  animation: bookBob 3.2s ease-in-out infinite;
+}
+
+/* —— Think —— */
+.think {
+  animation: thinkSway 2.8s ease-in-out infinite;
+}
+
+.think .face {
+  animation: thinkTilt 2.8s ease-in-out infinite;
+}
+
+.think .body,
+.think .belly {
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+.think .eye,
+.think .eyeShine {
+  animation: blink 3.6s ease-in-out infinite;
+}
+
+.think .book {
+  animation: bookOpen 2.4s ease-in-out infinite;
+}
+
+.think .earLeftGroup {
+  animation: earThinkLeft 2.8s ease-in-out infinite;
+}
+
+.think .earRightGroup {
+  animation: earThinkRight 2.8s ease-in-out infinite;
+}
+
+/* —— Cheer —— */
 .cheer {
-  animation: cheerJump 0.9s var(--ease-bounce);
+  animation: cheerJump 0.95s var(--ease-bounce);
 }
 
-.cheer .earLeft,
-.cheer .earRight {
+.cheer .earLeftGroup,
+.cheer .earRightGroup {
   animation: earWiggle 0.45s ease-in-out 2;
-  transform-origin: center bottom;
+}
+
+.cheer .armLeftGroup {
+  animation: armUpLeft 0.95s var(--ease-bounce);
+}
+
+.cheer .armRightGroup {
+  animation: armUpRight 0.95s var(--ease-bounce);
 }
 
 .cheer .eye,
@@ -92,6 +195,25 @@
   animation: none;
 }
 
+/* —— Sad —— */
+.sad {
+  animation: sadSigh 2.4s ease-in-out infinite;
+}
+
+.sad .body,
+.sad .belly {
+  animation: sadSquash 2.4s ease-in-out infinite;
+}
+
+.sad .earLeftGroup {
+  animation: earDroopLeft 2.4s ease-in-out infinite;
+}
+
+.sad .earRightGroup {
+  animation: earDroopRight 2.4s ease-in-out infinite;
+}
+
+/* —— Keyframes —— */
 @keyframes float {
   0%,
   100% {
@@ -108,7 +230,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.035, 1.02);
+    transform: scale(1.04, 1.02);
   }
 }
 
@@ -124,30 +246,115 @@
   }
 }
 
-@keyframes bounceHappy {
-  0% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(1.08) translateY(-10px);
-  }
+@keyframes earTwitchLeft {
+  0%,
+  72%,
   100% {
-    transform: scale(1);
+    transform: rotate(0deg);
+  }
+  76% {
+    transform: rotate(-10deg);
+  }
+  80% {
+    transform: rotate(4deg);
+  }
+  84% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes earTwitchRight {
+  0%,
+  72%,
+  100% {
+    transform: rotate(0deg);
+  }
+  76% {
+    transform: rotate(10deg);
+  }
+  80% {
+    transform: rotate(-4deg);
+  }
+  84% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes bookBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes thinkSway {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(-2deg);
+  }
+}
+
+@keyframes thinkTilt {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-6deg);
+  }
+}
+
+@keyframes bookOpen {
+  0%,
+  100% {
+    transform: scaleX(1) translateY(0);
+  }
+  50% {
+    transform: scaleX(1.08) translateY(-2px);
+  }
+}
+
+@keyframes earThinkLeft {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes earThinkRight {
+  0%,
+  100% {
+    transform: rotate(6deg);
+  }
+  50% {
+    transform: rotate(0deg);
   }
 }
 
 @keyframes cheerJump {
   0% {
-    transform: translateY(0) rotate(0deg);
+    transform: scale(1, 1) translateY(0) rotate(0deg);
   }
-  30% {
-    transform: translateY(-22px) rotate(-4deg);
+  18% {
+    transform: scale(1.08, 0.88) translateY(4px) rotate(0deg);
   }
-  60% {
-    transform: translateY(-8px) rotate(4deg);
+  40% {
+    transform: scale(0.94, 1.08) translateY(-26px) rotate(-5deg);
+  }
+  65% {
+    transform: scale(1.02, 0.98) translateY(-10px) rotate(4deg);
   }
   100% {
-    transform: translateY(0) rotate(0deg);
+    transform: scale(1) translateY(0) rotate(0deg);
   }
 }
 
@@ -157,20 +364,95 @@
     transform: rotate(0deg);
   }
   50% {
-    transform: rotate(8deg);
+    transform: rotate(12deg);
+  }
+}
+
+@keyframes armUpLeft {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  40% {
+    transform: rotate(-35deg) translateY(-14px);
+  }
+  65% {
+    transform: rotate(-20deg) translateY(-6px);
+  }
+}
+
+@keyframes armUpRight {
+  0%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  40% {
+    transform: rotate(35deg) translateY(-14px);
+  }
+  65% {
+    transform: rotate(20deg) translateY(-6px);
+  }
+}
+
+@keyframes sadSigh {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(3px) scale(1.02, 0.96);
+  }
+  70% {
+    transform: translateY(1px) scale(1);
+  }
+}
+
+@keyframes sadSquash {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.04, 0.94);
+  }
+}
+
+@keyframes earDroopLeft {
+  0%,
+  100% {
+    transform: rotate(-18deg) translateY(4px);
+  }
+  50% {
+    transform: rotate(-22deg) translateY(6px);
+  }
+}
+
+@keyframes earDroopRight {
+  0%,
+  100% {
+    transform: rotate(18deg) translateY(4px);
+  }
+  50% {
+    transform: rotate(22deg) translateY(6px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .wrap,
+  .idle,
+  .think,
+  .cheer,
+  .sad,
   .body,
   .belly,
   .eye,
   .eyeShine,
-  .happy,
-  .cheer,
-  .cheer .earLeft,
-  .cheer .earRight {
+  .earLeftGroup,
+  .earRightGroup,
+  .armLeftGroup,
+  .armRightGroup,
+  .face,
+  .book {
     animation: none;
   }
 }

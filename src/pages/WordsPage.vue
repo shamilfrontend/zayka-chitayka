@@ -39,7 +39,7 @@
               {{ part }}
             </span>
           </div>
-          <span v-if="learned" :class="styles.badge">★</span>
+          <span v-if="learned" :class="styles.badge">✓</span>
         </button>
       </div>
 
@@ -81,72 +81,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import BigButton from "../components/BigButton.vue";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import PageShell from "../components/PageShell.vue";
+import { useLearnDeck } from "../composables/useLearnDeck";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { speakRussian } from "../lib/speech";
 import styles from "./Learn.module.css";
 
 const router = useRouter();
-const index = ref(0);
-const showOffer = ref(false);
-const { learnWord, progress, sectionPassed } = useProgress();
-const { words, level } = useLevelContent();
+const { learnWord, progress } = useProgress();
+const { words } = useLevelContent();
 
-const word = computed(() => words.value[index.value]);
-const learned = computed(() =>
-  progress.value.wordsLearned.includes(word.value.text),
-);
+const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
+  useLearnDeck({
+    items: words,
+    speakItem: (word) => speakRussian(word.hint),
+    markLearned: (word) => learnWord(word.text),
+    isItemLearned: (word) =>
+      progress.value.wordsLearned.includes(word.text),
+    sectionId: "words",
+  });
 
-const allViewed = computed(
-  () =>
-    words.value.length > 0 &&
-    words.value.every((item) =>
-      progress.value.wordsLearned.includes(item.text),
-    ),
-);
-
-const passed = computed(() => sectionPassed("words"));
-const readyForTest = computed(() => allViewed.value && !passed.value);
-
-watch(level, () => {
-  index.value = 0;
-  showOffer.value = false;
-});
-
-watch(
-  word,
-  (value) => {
-    if (value && !showOffer.value) {
-      speakRussian(value.hint);
-    }
-  },
-  { immediate: true },
-);
-
-const goNext = () => {
-  const beforeReady = readyForTest.value;
-  learnWord(word.value.text);
-
-  const nowAllViewed =
-    words.value.length > 0 &&
-    words.value.every((item) =>
-      progress.value.wordsLearned.includes(item.text),
-    );
-
-  if (nowAllViewed && !sectionPassed("words") && !beforeReady) {
-    showOffer.value = true;
-    return;
-  }
-
-  index.value = (index.value + 1) % words.value.length;
-};
-
-const goPrev = () => {
-  index.value = (index.value - 1 + words.value.length) % words.value.length;
-};
+const word = computed(() => item.value!);
 </script>

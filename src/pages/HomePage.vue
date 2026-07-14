@@ -6,30 +6,7 @@
       <p :class="styles.tagline">Давай учиться читать вместе!</p>
     </div>
 
-    <div
-      :class="styles.levels"
-      role="group"
-      aria-label="Уровень сложности"
-    >
-      <button
-        v-for="item in LEVELS"
-        :key="item.id"
-        type="button"
-        :class="[
-          styles.level,
-          styles[item.id],
-          { [styles.levelActive]: progress.level === item.id },
-        ]"
-        :aria-pressed="progress.level === item.id"
-        @click="setLevel(item.id)"
-      >
-        <span :class="styles.levelTitle">{{ item.title }}</span>
-        <span :class="styles.levelSub">{{ item.subtitle }}</span>
-      </button>
-    </div>
-
     <ProgressBar
-      :stars="progress.stars"
       :letters-passed="lettersPassed"
       :syllables-passed="syllablesPassed"
       :words-passed="wordsPassed"
@@ -51,68 +28,57 @@
       </RouterLink>
     </nav>
 
-    <div :class="styles.resetZone">
-      <button
-        v-if="!confirmReset"
-        type="button"
-        :class="styles.resetBtn"
-        @click="confirmReset = true"
-      >
-        Сбросить прогресс
-      </button>
-      <div v-else :class="styles.resetConfirm" role="group" aria-label="Подтверждение сброса">
-        <p :class="styles.resetText">Точно начать заново?</p>
-        <div :class="styles.resetActions">
-          <button type="button" :class="styles.resetYes" @click="doReset">
-            Да, сбросить
-          </button>
-          <button type="button" :class="styles.resetNo" @click="confirmReset = false">
-            Отмена
-          </button>
-        </div>
-      </div>
-    </div>
+    <nav :class="styles.footerLinks" aria-label="Дополнительно">
+      <RouterLink :to="'/settings'" :class="styles.footerLink">
+        Настройки
+      </RouterLink>
+      <span :class="styles.footerDot" aria-hidden="true">·</span>
+      <RouterLink :to="'/about'" :class="styles.footerLink">
+        Об авторе
+      </RouterLink>
+    </nav>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { RouterLink } from "vue-router";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import ProgressBar from "../components/ProgressBar.vue";
-import { LEVELS } from "../data/levels";
 import { useLevelContent } from "../composables/useLevelContent";
-import { useProgress } from "../composables/useProgress";
 import styles from "./HomePage.module.css";
 
-const { progress, setLevel, reset } = useProgress();
-const { lettersPassed, syllablesPassed, wordsPassed } = useLevelContent();
-const confirmReset = ref(false);
-
-const doReset = () => {
-  reset();
-  confirmReset.value = false;
-};
+const {
+  letters,
+  syllables,
+  words,
+  lettersDone,
+  syllablesDone,
+  wordsDone,
+  lettersPassed,
+  syllablesPassed,
+  wordsPassed,
+} = useLevelContent();
 
 const modes = computed(() => [
   {
     to: "/letters",
     title: "Буквы",
-    subtitle: lettersPassed.value ? "✓ Сдано!" : "Знакомимся",
+    subtitle: `Изучено ${lettersDone.value} из ${letters.value.length}`,
     variant: "mint" as const,
     passed: lettersPassed.value,
   },
   {
     to: "/syllables",
     title: "Слоги",
-    subtitle: syllablesPassed.value ? "✓ Сдано!" : "Складываем",
+    subtitle: `Изучено ${syllablesDone.value} из ${syllables.value.length}`,
     variant: "peach" as const,
     passed: syllablesPassed.value,
   },
   {
     to: "/words",
     title: "Слова",
-    subtitle: wordsPassed.value ? "✓ Сдано!" : "Читаем",
+    subtitle: `Изучено ${wordsDone.value} из ${words.value.length}`,
     variant: "sky" as const,
     passed: wordsPassed.value,
   },

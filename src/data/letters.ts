@@ -1,6 +1,4 @@
-import type { LevelId } from "./levels";
-
-export type LetterKind = "vowel" | "consonant" | "sign";
+type LetterKind = "vowel" | "consonant" | "sign";
 
 export interface Letter {
   char: string;
@@ -9,24 +7,8 @@ export interface Letter {
   hint: string;
 }
 
-/** Первая очередь — базовый уровень */
-export const BASIC_LETTERS: Letter[] = [
-  { char: "А", name: "а", kind: "vowel", hint: "как в Аист" },
-  { char: "О", name: "о", kind: "vowel", hint: "как в Облако" },
-  { char: "У", name: "у", kind: "vowel", hint: "как в Утка" },
-  { char: "И", name: "и", kind: "vowel", hint: "как в Игра" },
-  { char: "М", name: "эм", kind: "consonant", hint: "как в Мама" },
-  { char: "П", name: "пэ", kind: "consonant", hint: "как в Папа" },
-  { char: "С", name: "эс", kind: "consonant", hint: "как в Сок" },
-  { char: "Т", name: "тэ", kind: "consonant", hint: "как в Торт" },
-  { char: "Н", name: "эн", kind: "consonant", hint: "как в Нос" },
-  { char: "К", name: "ка", kind: "consonant", hint: "как в Кот" },
-  { char: "Л", name: "эль", kind: "consonant", hint: "как в Луна" },
-  { char: "Б", name: "бэ", kind: "consonant", hint: "как в Банка" },
-];
-
-/** Весь русский алфавит — продвинутый уровень */
-export const ADVANCED_LETTERS: Letter[] = [
+/** Весь русский алфавит */
+export const LETTERS: Letter[] = [
   { char: "А", name: "а", kind: "vowel", hint: "как в Аист" },
   { char: "Б", name: "бэ", kind: "consonant", hint: "как в Банка" },
   { char: "В", name: "вэ", kind: "consonant", hint: "как в Вода" },
@@ -72,16 +54,5 @@ export const ADVANCED_LETTERS: Letter[] = [
   { char: "Я", name: "я", kind: "vowel", hint: "как в Яблоко" },
 ];
 
-/** @deprecated используйте getLettersForLevel */
-export const LETTERS = BASIC_LETTERS;
-
-export const VOWELS = ADVANCED_LETTERS.filter((l) => l.kind === "vowel");
-export const CONSONANTS = ADVANCED_LETTERS.filter((l) => l.kind === "consonant");
-
-export function getLettersForLevel(level: LevelId): Letter[] {
-  return level === "basic" ? BASIC_LETTERS : ADVANCED_LETTERS;
-}
-
-export function getLetter(char: string): Letter | undefined {
-  return ADVANCED_LETTERS.find((l) => l.char === char.toUpperCase());
-}
+export const VOWELS = LETTERS.filter((l) => l.kind === "vowel");
+export const CONSONANTS = LETTERS.filter((l) => l.kind === "consonant");

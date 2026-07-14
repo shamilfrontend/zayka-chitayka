@@ -32,7 +32,7 @@
           <span :class="styles.hint">
             {{ syllable.consonant }} + {{ syllable.vowel }}
           </span>
-          <span v-if="learned" :class="styles.badge">★</span>
+          <span v-if="learned" :class="styles.badge">✓</span>
         </button>
       </div>
 
@@ -80,73 +80,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import BigButton from "../components/BigButton.vue";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import PageShell from "../components/PageShell.vue";
+import { useLearnDeck } from "../composables/useLearnDeck";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { speakRussian } from "../lib/speech";
 import styles from "./Learn.module.css";
 
 const router = useRouter();
-const index = ref(0);
-const showOffer = ref(false);
-const { learnSyllable, progress, sectionPassed } = useProgress();
-const { syllables, level } = useLevelContent();
+const { learnSyllable, progress } = useProgress();
+const { syllables } = useLevelContent();
 
-const syllable = computed(() => syllables.value[index.value]);
-const learned = computed(() =>
-  progress.value.syllablesLearned.includes(syllable.value.text),
-);
+const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
+  useLearnDeck({
+    items: syllables,
+    speakItem: (syllable) => speakRussian(syllable.text.toLowerCase()),
+    markLearned: (syllable) => learnSyllable(syllable.text),
+    isItemLearned: (syllable) =>
+      progress.value.syllablesLearned.includes(syllable.text),
+    sectionId: "syllables",
+  });
 
-const allViewed = computed(
-  () =>
-    syllables.value.length > 0 &&
-    syllables.value.every((item) =>
-      progress.value.syllablesLearned.includes(item.text),
-    ),
-);
-
-const passed = computed(() => sectionPassed("syllables"));
-const readyForTest = computed(() => allViewed.value && !passed.value);
-
-watch(level, () => {
-  index.value = 0;
-  showOffer.value = false;
-});
-
-watch(
-  syllable,
-  (value) => {
-    if (value && !showOffer.value) {
-      speakRussian(value.text.toLowerCase());
-    }
-  },
-  { immediate: true },
-);
-
-const goNext = () => {
-  const beforeReady = readyForTest.value;
-  learnSyllable(syllable.value.text);
-
-  const nowAllViewed =
-    syllables.value.length > 0 &&
-    syllables.value.every((item) =>
-      progress.value.syllablesLearned.includes(item.text),
-    );
-
-  if (nowAllViewed && !sectionPassed("syllables") && !beforeReady) {
-    showOffer.value = true;
-    return;
-  }
-
-  index.value = (index.value + 1) % syllables.value.length;
-};
-
-const goPrev = () => {
-  index.value =
-    (index.value - 1 + syllables.value.length) % syllables.value.length;
-};
+const syllable = computed(() => item.value!);
 </script>

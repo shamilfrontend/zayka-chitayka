@@ -1,19 +1,13 @@
-import { isLevelId, type LevelId } from "../data/levels";
-
 const STORAGE_KEY = "reader-bunny-progress";
 
 export type SectionId = "letters" | "syllables" | "words";
 
-export type SectionsPassed = Partial<
-  Record<LevelId, Partial<Record<SectionId, boolean>>>
->;
+type SectionsPassed = Partial<Record<SectionId, boolean>>;
 
 export interface Progress {
   lettersLearned: string[];
   syllablesLearned: string[];
   wordsLearned: string[];
-  stars: number;
-  level: LevelId;
   sectionsPassed: SectionsPassed;
 }
 
@@ -21,17 +15,42 @@ const DEFAULT_PROGRESS: Progress = {
   lettersLearned: [],
   syllablesLearned: [],
   wordsLearned: [],
-  stars: 0,
-  level: "basic",
   sectionsPassed: {},
 };
 
+const SECTION_IDS: SectionId[] = ["letters", "syllables", "words"];
+
+/** Миграция со старого формата sectionsPassed по уровням */
 function parseSectionsPassed(value: unknown): SectionsPassed {
   if (!value || typeof value !== "object") {
     return {};
   }
 
-  return value as SectionsPassed;
+  const raw = value as Record<string, unknown>;
+  const result: SectionsPassed = {};
+
+  for (const section of SECTION_IDS) {
+    if (raw[section] === true) {
+      result[section] = true;
+      continue;
+    }
+
+    // Старый формат: { basic: { letters: true }, advanced: { ... } }
+    const fromBasic =
+      raw.basic &&
+      typeof raw.basic === "object" &&
+      (raw.basic as Record<string, unknown>)[section] === true;
+    const fromAdvanced =
+      raw.advanced &&
+      typeof raw.advanced === "object" &&
+      (raw.advanced as Record<string, unknown>)[section] === true;
+
+    if (fromBasic || fromAdvanced) {
+      result[section] = true;
+    }
+  }
+
+  return result;
 }
 
 export function loadProgress(): Progress {
@@ -42,12 +61,11 @@ export function loadProgress(): Progress {
     }
 
     const parsed = JSON.parse(raw) as Partial<Progress>;
+
     return {
       lettersLearned: parsed.lettersLearned ?? [],
       syllablesLearned: parsed.syllablesLearned ?? [],
       wordsLearned: parsed.wordsLearned ?? [],
-      stars: typeof parsed.stars === "number" ? parsed.stars : 0,
-      level: isLevelId(parsed.level) ? parsed.level : "basic",
       sectionsPassed: parseSectionsPassed(parsed.sectionsPassed),
     };
   } catch {
@@ -55,34 +73,22 @@ export function loadProgress(): Progress {
   }
 }
 
-export function saveProgress(progress: Progress): void {
+function saveProgress(progress: Progress): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-}
-
-export function setLevel(level: LevelId): Progress {
-  const progress = loadProgress();
-  progress.level = level;
-  saveProgress(progress);
-  return progress;
 }
 
 export function isSectionPassed(
   progress: Progress,
-  level: LevelId,
   section: SectionId,
 ): boolean {
-  return progress.sectionsPassed[level]?.[section] === true;
+  return progress.sectionsPassed[section] === true;
 }
 
-export function markSectionPassed(
-  level: LevelId,
-  section: SectionId,
-): Progress {
+export function markSectionPassed(section: SectionId): Progress {
   const progress = loadProgress();
-  const levelPassed = { ...progress.sectionsPassed[level], [section]: true };
   progress.sectionsPassed = {
     ...progress.sectionsPassed,
-    [level]: levelPassed,
+    [section]: true,
   };
   saveProgress(progress);
   return progress;
@@ -94,7 +100,6 @@ export function markLetterLearned(char: string): Progress {
 
   if (!progress.lettersLearned.includes(upper)) {
     progress.lettersLearned = [...progress.lettersLearned, upper];
-    progress.stars += 1;
     saveProgress(progress);
   }
 
@@ -107,7 +112,6 @@ export function markSyllableLearned(text: string): Progress {
 
   if (!progress.syllablesLearned.includes(upper)) {
     progress.syllablesLearned = [...progress.syllablesLearned, upper];
-    progress.stars += 1;
     saveProgress(progress);
   }
 
@@ -120,26 +124,15 @@ export function markWordLearned(text: string): Progress {
 
   if (!progress.wordsLearned.includes(upper)) {
     progress.wordsLearned = [...progress.wordsLearned, upper];
-    progress.stars += 1;
     saveProgress(progress);
   }
 
   return progress;
 }
 
-export function addStars(count: number): Progress {
-  const progress = loadProgress();
-  progress.stars += count;
-  saveProgress(progress);
-  return progress;
-}
-
-/** Полный сброс прогресса (сохраняет только выбранный уровень) */
 export function resetProgress(): Progress {
-  const current = loadProgress();
   const next: Progress = {
     ...DEFAULT_PROGRESS,
-    level: current.level,
     lettersLearned: [],
     syllablesLearned: [],
     wordsLearned: [],

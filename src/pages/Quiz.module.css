@@ -31,6 +31,13 @@
   max-width: 360px;
 }
 
+.choices4 {
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+  max-width: none;
+  width: 100%;
+}
+
 @media (min-width: 540px) {
   .choices3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -41,10 +48,13 @@
 .choiceWrap {
   position: relative;
   display: flex;
+  width: 100%;
+  min-width: 0;
 }
 
 .choiceWrap button {
   width: 100%;
+  min-width: 0;
 }
 
 .streak {
@@ -73,53 +83,8 @@
   }
 }
 
-.result {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-md);
-  text-align: center;
-  width: 100%;
-  max-width: 420px;
-  animation: fadeUp 0.45s ease;
-}
-
-.resultTitle {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 6vw, 2.4rem);
-  font-weight: 700;
-  line-height: 1.15;
-}
-
-.resultText {
-  margin: 0;
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--color-ink-soft);
-}
-
-.resultActions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  width: 100%;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .retryMsg,
-  .result {
+  .retryMsg {
     animation: none;
   }
 }

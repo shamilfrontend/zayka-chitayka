@@ -1,46 +1,23 @@
 <template>
   <PageShell title="Проверка букв" back-to="/letters">
-    <template v-if="phase === 'result'">
-      <div :class="styles.result">
-        <BunnyMascot size="md" :mood="passed ? 'cheer' : 'idle'" />
-        <h2 :class="styles.resultTitle">
-          {{ passed ? "Раздел сдан!" : "Есть ошибки" }}
-        </h2>
-        <p :class="styles.resultText">
-          {{
-            passed
-              ? "Ты верно ответил на все вопросы."
-              : `Ошибок: ${errors}. Давай повторим материал.`
-          }}
-        </p>
-        <div :class="styles.resultActions">
-          <BigButton
-            v-if="passed"
-            variant="mint"
-            size="lg"
-            full-width
-            @click="router.push('/')"
-          >
-            На главную
-          </BigButton>
-          <BigButton
-            v-else
-            variant="peach"
-            size="lg"
-            full-width
-            @click="router.push('/letters')"
-          >
-            Повторить материал
-          </BigButton>
-        </div>
-      </div>
-    </template>
+    <SectionResult
+      v-if="phase === 'result'"
+      :passed="passed"
+      :errors="errors"
+      fail-back-to="/letters"
+    />
 
     <template v-else>
       <div :class="styles.prompt">
         <BunnyMascot
           size="sm"
-          :mood="feedback === 'correct' ? 'cheer' : 'idle'"
+          :mood="
+            feedback === 'correct'
+              ? 'cheer'
+              : feedback === 'wrong'
+                ? 'sad'
+                : 'think'
+          "
         />
         <p :class="styles.question">
           Где буква <strong>{{ target?.char }}</strong>?
@@ -54,11 +31,6 @@
           :key="letter.char"
           :class="styles.choiceWrap"
         >
-          <StarBurst
-            v-if="burst && letter.char === target?.char"
-            :show="burst"
-            @done="burst = false"
-          />
           <BigButton
             size="xl"
             :variant="choiceVariant(letter, 'mint', 'peach')"
@@ -78,11 +50,10 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import BigButton from "../components/BigButton.vue";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import PageShell from "../components/PageShell.vue";
-import StarBurst from "../components/StarBurst.vue";
+import SectionResult from "../components/SectionResult.vue";
 import type { Letter } from "../data/letters";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
@@ -91,7 +62,6 @@ import { speakRussian } from "../lib/speech";
 import { playSuccess } from "../lib/sounds";
 import styles from "./Quiz.module.css";
 
-const router = useRouter();
 const { letters } = useLevelContent();
 const { passSection } = useProgress();
 
@@ -101,7 +71,6 @@ const {
   feedback,
   errors,
   phase,
-  burst,
   passed,
   counterLabel,
   ask,
@@ -112,7 +81,7 @@ const {
   getKey: (letter) => letter.char,
   choiceCount: 4,
   onAsk: (letter) => {
-    speakRussian(`Найди букву ${letter.name}`);
+    speakRussian(`Где буква ${letter.char}?`);
   },
   onFinish: (didPass) => {
     if (didPass) {

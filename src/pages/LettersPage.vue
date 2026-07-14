@@ -30,7 +30,7 @@
         >
           <span :class="styles.giant">{{ letter.char }}</span>
           <span :class="styles.hint">{{ letter.hint }}</span>
-          <span v-if="learned" :class="styles.badge">★</span>
+          <span v-if="learned" :class="styles.badge">✓</span>
         </button>
       </div>
 
@@ -72,73 +72,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import BigButton from "../components/BigButton.vue";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import PageShell from "../components/PageShell.vue";
+import { useLearnDeck } from "../composables/useLearnDeck";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { speakRussian } from "../lib/speech";
 import styles from "./Learn.module.css";
 
 const router = useRouter();
-const index = ref(0);
-const showOffer = ref(false);
-const { learnLetter, progress, sectionPassed } = useProgress();
-const { letters, level } = useLevelContent();
+const { learnLetter, progress } = useProgress();
+const { letters } = useLevelContent();
 
-const letter = computed(() => letters.value[index.value]);
-const learned = computed(() =>
-  progress.value.lettersLearned.includes(letter.value.char),
-);
+const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
+  useLearnDeck({
+    items: letters,
+    speakItem: (letter) => speakRussian(letter.name),
+    markLearned: (letter) => learnLetter(letter.char),
+    isItemLearned: (letter) =>
+      progress.value.lettersLearned.includes(letter.char),
+    sectionId: "letters",
+  });
 
-const allViewed = computed(
-  () =>
-    letters.value.length > 0 &&
-    letters.value.every((item) =>
-      progress.value.lettersLearned.includes(item.char),
-    ),
-);
-
-const passed = computed(() => sectionPassed("letters"));
-const readyForTest = computed(() => allViewed.value && !passed.value);
-
-watch(level, () => {
-  index.value = 0;
-  showOffer.value = false;
-});
-
-watch(
-  letter,
-  (value) => {
-    if (value && !showOffer.value) {
-      speakRussian(value.name);
-    }
-  },
-  { immediate: true },
-);
-
-const goNext = () => {
-  const beforeReady = readyForTest.value;
-  learnLetter(letter.value.char);
-
-  const nowAllViewed =
-    letters.value.length > 0 &&
-    letters.value.every((item) =>
-      progress.value.lettersLearned.includes(item.char),
-    );
-
-  if (nowAllViewed && !sectionPassed("letters") && !beforeReady) {
-    showOffer.value = true;
-    return;
-  }
-
-  index.value = (index.value + 1) % letters.value.length;
-};
-
-const goPrev = () => {
-  index.value =
-    (index.value - 1 + letters.value.length) % letters.value.length;
-};
+const letter = computed(() => item.value!);
 </script>

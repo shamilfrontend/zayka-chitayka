@@ -1,9 +1,9 @@
-import { computed, ref, type Ref } from "vue";
+import { onUnmounted, computed, ref, type Ref } from "vue";
 import { buildChoices, shuffle } from "../lib/progress";
 import { playSuccess, playTryAgain } from "../lib/sounds";
 
-export type TestFeedback = "idle" | "correct" | "wrong";
-export type TestPhase = "question" | "result";
+type TestFeedback = "idle" | "correct" | "wrong";
+type TestPhase = "question" | "result";
 
 interface UseSectionTestOptions<T> {
   pool: () => T[];
@@ -24,8 +24,14 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
   const feedback = ref<TestFeedback>("idle");
   const errors = ref(0);
   const phase = ref<TestPhase>("question");
-  const burst = ref(false);
   let advanceTimer: number | undefined;
+
+  const clearAdvanceTimer = () => {
+    if (advanceTimer !== undefined) {
+      window.clearTimeout(advanceTimer);
+      advanceTimer = undefined;
+    }
+  };
 
   const total = computed(() => queue.value.length);
   const target = computed(() => queue.value[index.value]);
@@ -48,24 +54,6 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
     );
   };
 
-  const start = () => {
-    if (advanceTimer !== undefined) {
-      window.clearTimeout(advanceTimer);
-      advanceTimer = undefined;
-    }
-    queue.value = shuffle(options.pool());
-    index.value = 0;
-    errors.value = 0;
-    feedback.value = "idle";
-    burst.value = false;
-    phase.value = queue.value.length > 0 ? "question" : "result";
-    syncChoices();
-
-    if (phase.value === "question") {
-      ask();
-    }
-  };
-
   const ask = () => {
     const current = target.value;
     if (current && phase.value === "question") {
@@ -80,7 +68,6 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
 
   const goNext = () => {
     feedback.value = "idle";
-    burst.value = false;
 
     if (index.value + 1 >= queue.value.length) {
       finish();
@@ -90,6 +77,20 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
     index.value += 1;
     syncChoices();
     ask();
+  };
+
+  const start = () => {
+    clearAdvanceTimer();
+    queue.value = shuffle(options.pool());
+    index.value = 0;
+    errors.value = 0;
+    feedback.value = "idle";
+    phase.value = queue.value.length > 0 ? "question" : "result";
+    syncChoices();
+
+    if (phase.value === "question") {
+      ask();
+    }
   };
 
   const pick = (item: T) => {
@@ -102,12 +103,10 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
       return;
     }
 
-    const correct =
-      options.getKey(item) === options.getKey(current);
+    const correct = options.getKey(item) === options.getKey(current);
 
     if (correct) {
       feedback.value = "correct";
-      burst.value = true;
       playSuccess();
     } else {
       feedback.value = "wrong";
@@ -115,6 +114,7 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
       playTryAgain();
     }
 
+    clearAdvanceTimer();
     advanceTimer = window.setTimeout(() => {
       advanceTimer = undefined;
       goNext();
@@ -142,6 +142,7 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
     return idleVariant;
   };
 
+  onUnmounted(clearAdvanceTimer);
   start();
 
   return {
@@ -150,14 +151,10 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
     feedback,
     errors,
     phase,
-    burst,
-    total,
     passed,
     counterLabel,
-    index,
     ask,
     pick,
     choiceVariant,
-    start,
   };
 }

@@ -12,11 +12,7 @@
   font-weight: 700;
 }
 
-.stars {
-  color: #d4a017;
-  font-size: 1.2rem;
-}
-
+.title,
 .label {
   color: var(--color-ink-soft);
 }

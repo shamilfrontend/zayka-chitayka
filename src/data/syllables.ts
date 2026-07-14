@@ -1,4 +1,3 @@
-import type { LevelId } from "./levels";
 import { CONSONANTS, VOWELS } from "./letters";
 
 export interface Syllable {
@@ -8,7 +7,7 @@ export interface Syllable {
 }
 
 /** Все открытые слоги из согласных × гласных полного алфавита */
-export const SYLLABLES: Syllable[] = CONSONANTS.flatMap((c) =>
+const SYLLABLES: Syllable[] = CONSONANTS.flatMap((c) =>
   VOWELS.map((v) => ({
     text: `${c.char}${v.char}`,
     consonant: c.char,
@@ -16,7 +15,7 @@ export const SYLLABLES: Syllable[] = CONSONANTS.flatMap((c) =>
   })),
 );
 
-export function getSyllable(text: string): Syllable | undefined {
+function getSyllable(text: string): Syllable | undefined {
   return SYLLABLES.find((s) => s.text === text.toUpperCase());
 }
 
@@ -30,71 +29,143 @@ function resolveSyllables(texts: readonly string[]): Syllable[] {
   });
 }
 
-const BASIC_SYLLABLE_TEXTS = [
+/** Курируемый набор слогов для обучения */
+const INTRO_SYLLABLE_TEXTS = [
+  // М
   "МА",
   "МО",
   "МУ",
   "МИ",
+  "МЫ",
+  "МЕ",
+  "МЁ",
+  "МЯ",
+  // П
   "ПА",
   "ПО",
-  "СА",
-  "СУ",
+  "ПУ",
+  "ПИ",
+  "ПЕ",
+  "ПЁ",
+  // Б
+  "БА",
+  "БО",
+  "БУ",
+  "БИ",
+  "БЕ",
+  "БЯ",
+  // Т
   "ТА",
   "ТО",
-  "НА",
-  "НО",
-  "КА",
-  "КО",
-  "ЛА",
-  "ЛИ",
-  "БА",
-  "БУ",
-] as const;
-
-const ADVANCED_SYLLABLE_TEXTS = [
-  "МА",
-  "МО",
-  "РА",
-  "РЫ",
-  "ВА",
-  "ВЕ",
+  "ТУ",
+  "ТИ",
+  "ТЕ",
+  "ТЁ",
+  // Д
   "ДА",
   "ДО",
-  "ГА",
-  "ГУ",
-  "ЗО",
-  "ЗИ",
-  "ЖУ",
-  "ЖА",
-  "ФА",
-  "ФО",
-  "ХА",
-  "ХО",
-  "ЦА",
-  "ЦИ",
-  "ЧА",
-  "ЧУ",
-  "ША",
-  "ШУ",
-  "ЩА",
-  "ЩУ",
+  "ДУ",
+  "ДИ",
+  "ДЕ",
+  "ДЁ",
+  // Н
+  "НА",
+  "НО",
+  "НУ",
+  "НИ",
+  "НЕ",
+  "НЁ",
+  "НЭ",
+  "НЯ",
+  // К
+  "КА",
+  "КО",
+  "КУ",
+  "КИ",
+  "КЕ",
+  // Л
+  "ЛА",
+  "ЛО",
+  "ЛУ",
+  "ЛИ",
+  "ЛЕ",
+  "ЛЁ",
   "ЛЯ",
   "ЛЮ",
-  "МЁ",
-  "НЭ",
+  // Р
+  "РА",
+  "РО",
+  "РУ",
+  "РИ",
+  "РЕ",
+  "РЫ",
+  "РЯ",
+  // С
+  "СА",
+  "СО",
+  "СУ",
+  "СИ",
+  "СЕ",
+  "СЫ",
+  "СЯ",
+  // В
+  "ВА",
+  "ВО",
+  "ВУ",
+  "ВИ",
+  "ВЕ",
+  "ВЫ",
+  // Г
+  "ГА",
+  "ГО",
+  "ГУ",
+  "ГИ",
+  "ГЕ",
+  // З
+  "ЗА",
+  "ЗО",
+  "ЗУ",
+  "ЗИ",
+  "ЗЕ",
+  // Ж
+  "ЖА",
+  "ЖО",
+  "ЖУ",
+  "ЖИ",
+  // Ф
+  "ФА",
+  "ФО",
+  "ФУ",
+  "ФИ",
+  // Х
+  "ХА",
+  "ХО",
+  "ХУ",
+  "ХИ",
+  // Ц
+  "ЦА",
+  "ЦО",
+  "ЦУ",
+  "ЦИ",
+  // Ч
+  "ЧА",
+  "ЧО",
+  "ЧУ",
+  "ЧИ",
+  // Ш
+  "ША",
+  "ШО",
+  "ШУ",
+  "ШИ",
+  // Щ
+  "ЩА",
+  "ЩО",
+  "ЩУ",
+  "ЩИ",
+  // Й
+  "ЙО",
+  "ЙА",
+  "ЙУ",
 ] as const;
 
-/** Слоги базового уровня */
-export const BASIC_SYLLABLES: Syllable[] = resolveSyllables(BASIC_SYLLABLE_TEXTS);
-
-/** Курируемый набор слогов продвинутого уровня */
-export const ADVANCED_SYLLABLES: Syllable[] = resolveSyllables(
-  ADVANCED_SYLLABLE_TEXTS,
-);
-
-/** @deprecated используйте getSyllablesForLevel */
-export const INTRO_SYLLABLES = BASIC_SYLLABLES;
-
-export function getSyllablesForLevel(level: LevelId): Syllable[] {
-  return level === "basic" ? BASIC_SYLLABLES : ADVANCED_SYLLABLES;
-}
+export const INTRO_SYLLABLES: Syllable[] = resolveSyllables(INTRO_SYLLABLE_TEXTS);

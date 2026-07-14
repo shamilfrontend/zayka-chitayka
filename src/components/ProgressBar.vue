@@ -1,7 +1,7 @@
 <template>
   <div :class="styles.wrap">
     <div :class="styles.top">
-      <span :class="styles.stars" :aria-label="`${stars} звёзд`">★ {{ stars }}</span>
+      <span :class="styles.title">Ваш прогресс</span>
       <span :class="styles.label">{{ percent }}%</span>
     </div>
     <div
@@ -26,7 +26,6 @@ import { computed } from "vue";
 import styles from "./ProgressBar.module.css";
 
 const props = defineProps<{
-  stars: number;
   lettersPassed: boolean;
   syllablesPassed: boolean;
   wordsPassed: boolean;

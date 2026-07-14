@@ -9,11 +9,15 @@ import SyllableTestPage from "./pages/SyllableTestPage.vue";
 import WordsPage from "./pages/WordsPage.vue";
 import WordQuizPage from "./pages/WordQuizPage.vue";
 import WordTestPage from "./pages/WordTestPage.vue";
+import SettingsPage from "./pages/SettingsPage.vue";
+import AboutPage from "./pages/AboutPage.vue";
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: "/", component: HomePage },
+    { path: "/settings", component: SettingsPage },
+    { path: "/about", component: AboutPage },
     { path: "/letters", component: LettersPage },
     { path: "/letters/quiz", component: LetterQuizPage },
     { path: "/letters/test", component: LetterTestPage },

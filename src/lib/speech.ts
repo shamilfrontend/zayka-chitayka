@@ -48,15 +48,3 @@ export function speakRussian(text: string, rate = 0.85): void {
 
   window.speechSynthesis.speak(utterance);
 }
-
-export function stopSpeaking(): void {
-  if (typeof window === "undefined" || !window.speechSynthesis) {
-    return;
-  }
-
-  window.speechSynthesis.cancel();
-}
-
-export function canSpeak(): boolean {
-  return typeof window !== "undefined" && "speechSynthesis" in window;
-}

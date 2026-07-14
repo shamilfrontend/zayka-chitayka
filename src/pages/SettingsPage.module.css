@@ -1,0 +1,124 @@
+.section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  animation: fadeUp 0.5s var(--ease-out) backwards;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.sectionHint {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+  text-align: center;
+  max-width: 28ch;
+}
+
+.resetZone {
+  width: 100%;
+  margin-top: var(--space-xs);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.resetBtn {
+  border: none;
+  background: var(--color-white);
+  color: var(--color-ink-soft);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  min-height: 52px;
+  padding: 0 var(--space-lg);
+  border-radius: var(--radius-btn);
+  box-shadow: var(--shadow-soft);
+}
+
+.resetBtn:hover,
+.resetBtn:focus-visible {
+  color: var(--color-ink);
+}
+
+.resetBtn:active {
+  transform: scale(0.97) translateY(2px);
+}
+
+.resetConfirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 320px;
+  padding: var(--space-md);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.resetText {
+  margin: 0;
+  font-weight: 800;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.resetActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: center;
+  width: 100%;
+}
+
+.resetYes,
+.resetNo {
+  font: inherit;
+  font-weight: 800;
+  border: none;
+  border-radius: var(--radius-btn);
+  min-height: 48px;
+  padding: 0 var(--space-md);
+  box-shadow: var(--shadow-press);
+}
+
+.resetYes {
+  background: var(--color-peach);
+  color: var(--color-ink);
+}
+
+.resetNo {
+  background: var(--color-white);
+  color: var(--color-ink-soft);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section {
+    animation: none;
+  }
+
+  .resetBtn {
+    transition: none;
+  }
+}

@@ -4,6 +4,16 @@
   position: relative;
 }
 
+.promptCard {
+  width: 100%;
+  max-width: 200px;
+}
+
+.promptWord {
+  min-height: 140px;
+  cursor: default;
+}
+
 .letterCard,
 .syllableCard,
 .wordCard {
@@ -69,8 +79,9 @@
   position: absolute;
   top: 16px;
   right: 18px;
-  color: #d4a017;
+  color: var(--color-mint-dark);
   font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .counter {

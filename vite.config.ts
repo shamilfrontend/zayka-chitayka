@@ -8,7 +8,7 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg"],
+      includeAssets: ["favicon.svg", "author.png"],
       manifest: {
         name: "Зайка-Читайка",
         short_name: "Читайка",
@@ -35,7 +35,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,svg,woff2,woff,ttf}"],
+        globPatterns: ["**/*.{js,css,html,ico,svg,png,woff2,woff,ttf}"],
       },
     }),
   ],
