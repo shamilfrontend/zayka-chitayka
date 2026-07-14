@@ -1,0 +1,137 @@
+.cardWrap {
+  width: 100%;
+  max-width: 320px;
+  position: relative;
+}
+
+.letterCard,
+.syllableCard,
+.wordCard {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  border: none;
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  animation: popIn 0.45s var(--ease-bounce);
+  cursor: pointer;
+  color: var(--color-ink);
+}
+
+.giant {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 22vw, 7rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.hint {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+.emoji {
+  font-size: clamp(3.5rem, 16vw, 5rem);
+  line-height: 1;
+}
+
+.wordText {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 10vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.syllables {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.syllableChip {
+  background: var(--color-mint-soft);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.badge {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  color: #d4a017;
+  font-size: 1.5rem;
+}
+
+.counter {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 420px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.quizLink {
+  width: 100%;
+  max-width: 420px;
+  margin-top: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.offer {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  animation: popIn 0.45s var(--ease-bounce);
+}
+
+.offerTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 1.9rem);
+  font-weight: 700;
+}
+
+.offerText {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

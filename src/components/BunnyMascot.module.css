@@ -1,0 +1,176 @@
+.wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  animation: float 3.2s ease-in-out infinite;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.sm {
+  width: 72px;
+}
+
+.md {
+  width: 140px;
+}
+
+.lg {
+  width: 200px;
+}
+
+.head,
+.body,
+.earLeft,
+.earRight,
+.foot,
+.tail {
+  fill: #f5ebe0;
+  stroke: #c9b8a6;
+  stroke-width: 2.5;
+  paint-order: stroke fill;
+}
+
+.body {
+  transform-origin: 60px 100px;
+  animation: breathe 3.6s ease-in-out infinite;
+}
+
+.belly {
+  fill: #fff8f0;
+  transform-origin: 60px 105px;
+  animation: breathe 3.6s ease-in-out infinite;
+}
+
+.earInnerLeft,
+.earInnerRight,
+.cheek,
+.nose {
+  fill: #ff8fa3;
+}
+
+.eye {
+  fill: #3d3a4a;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 4.8s ease-in-out infinite;
+}
+
+.eyeShine {
+  fill: #fff8f0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 4.8s ease-in-out infinite;
+}
+
+.mouth {
+  stroke: #3d3a4a;
+}
+
+.happy {
+  animation: bounceHappy 0.7s var(--ease-bounce);
+}
+
+.cheer {
+  animation: cheerJump 0.9s var(--ease-bounce);
+}
+
+.cheer .earLeft,
+.cheer .earRight {
+  animation: earWiggle 0.45s ease-in-out 2;
+  transform-origin: center bottom;
+}
+
+.cheer .eye,
+.cheer .eyeShine,
+.cheer .body,
+.cheer .belly {
+  animation: none;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.035, 1.02);
+  }
+}
+
+@keyframes blink {
+  0%,
+  42%,
+  48%,
+  100% {
+    transform: scaleY(1);
+  }
+  45% {
+    transform: scaleY(0.12);
+  }
+}
+
+@keyframes bounceHappy {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.08) translateY(-10px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes cheerJump {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-22px) rotate(-4deg);
+  }
+  60% {
+    transform: translateY(-8px) rotate(4deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes earWiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap,
+  .body,
+  .belly,
+  .eye,
+  .eyeShine,
+  .happy,
+  .cheer,
+  .cheer .earLeft,
+  .cheer .earRight {
+    animation: none;
+  }
+}

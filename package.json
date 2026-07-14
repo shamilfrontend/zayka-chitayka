@@ -1,0 +1,27 @@
+{
+  "name": "reader-bunny",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource/comfortaa": "^5.2.8",
+    "@fontsource/nunito": "^5.2.7",
+    "vue": "^3.5.22",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "oxlint": "^1.71.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.1.1",
+    "vite-plugin-pwa": "^1.3.0",
+    "vue-tsc": "^3.1.0"
+  }
+}
