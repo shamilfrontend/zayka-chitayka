@@ -26,3 +26,10 @@ export const router = createRouter({
     { path: "/:pathMatch(.*)*", redirect: "/" },
   ],
 });
+
+router.afterEach(() => {
+  const ym = window.ym;
+  if (typeof ym === "function") {
+    ym(110739961, "hit", window.location.href);
+  }
+});
