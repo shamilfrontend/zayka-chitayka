@@ -19,7 +19,7 @@ export const LETTERS: Letter[] = [
   { char: "Ж", name: "жэ", kind: "consonant", hint: "как в Жук" },
   { char: "З", name: "зэ", kind: "consonant", hint: "как в Зонт" },
   { char: "И", name: "и", kind: "vowel", hint: "как в Игра" },
-  { char: "Й", name: "и короткое", kind: "consonant", hint: "как в Йогурт" },
+  { char: "Й", name: "и краткое", kind: "consonant", hint: "как в Йогурт" },
   { char: "К", name: "ка", kind: "consonant", hint: "как в Кот" },
   { char: "Л", name: "эль", kind: "consonant", hint: "как в Луна" },
   { char: "М", name: "эм", kind: "consonant", hint: "как в Мама" },
