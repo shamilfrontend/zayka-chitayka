@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Откройте адрес из терминала (обычно `http://localhost:5173/reader-bunny/`).
+Откройте адрес из терминала (обычно `http://localhost:5173/zayka-chitayka/`).
 
 ## Сборка
 
@@ -20,22 +20,11 @@ npm run preview
 
 ## Деплой на GitHub Pages
 
-1. Создайте репозиторий с именем **`reader-bunny`** (имя важно: в `vite.config.ts` задан `base: "/reader-bunny/"`).
-2. Инициализируйте git и запушьте код:
+1. Репозиторий: **`zayka-chitayka`** (имя важно: в `vite.config.ts` задан `base: "/zayka-chitayka/"`).
+2. В GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+3. После успешного workflow приложение будет по адресу:
 
-```bash
-git init
-git add .
-git commit -m "Initial commit: Зайка-Читайка"
-git branch -M main
-git remote add origin https://github.com/<USER>/reader-bunny.git
-git push -u origin main
-```
-
-3. В GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-4. После успешного workflow приложение будет по адресу:
-
-`https://<USER>.github.io/reader-bunny/`
+`https://shamilfrontend.github.io/zayka-chitayka/`
 
 Workflow: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 

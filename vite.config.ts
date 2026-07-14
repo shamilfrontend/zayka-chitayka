@@ -5,7 +5,7 @@ import vue from "@vitejs/plugin-vue";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  base: "/reader-bunny/",
+  base: "/zayka-chitayka/",
   plugins: [
     vue(),
     VitePWA({
@@ -19,8 +19,8 @@ export default defineConfig({
         background_color: "#fff8f0",
         display: "standalone",
         lang: "ru",
-        start_url: "/reader-bunny/",
-        scope: "/reader-bunny/",
+        start_url: "/zayka-chitayka/",
+        scope: "/zayka-chitayka/",
         icons: [
           {
             src: "favicon.svg",
