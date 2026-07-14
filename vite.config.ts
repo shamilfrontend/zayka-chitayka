@@ -1,11 +1,9 @@
-import { copyFileSync, existsSync } from "node:fs";
-import { resolve } from "node:path";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  base: "/zayka-chitayka/",
+  base: "/",
   plugins: [
     vue(),
     VitePWA({
@@ -19,8 +17,8 @@ export default defineConfig({
         background_color: "#fff8f0",
         display: "standalone",
         lang: "ru",
-        start_url: "/zayka-chitayka/",
-        scope: "/zayka-chitayka/",
+        start_url: "/",
+        scope: "/",
         icons: [
           {
             src: "favicon.svg",
@@ -40,15 +38,5 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,ico,svg,woff2,woff,ttf}"],
       },
     }),
-    {
-      name: "spa-github-pages-fallback",
-      closeBundle() {
-        const indexHtml = resolve(__dirname, "dist/index.html");
-        const notFoundHtml = resolve(__dirname, "dist/404.html");
-        if (existsSync(indexHtml)) {
-          copyFileSync(indexHtml, notFoundHtml);
-        }
-      },
-    },
   ],
 });

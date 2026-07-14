@@ -2,6 +2,8 @@
 
 Игровое веб-приложение для детей 5–6 лет: учимся **читать по-русски** — буквы, слоги и простые слова.
 
+Сайт: [https://zayka-chitayka.ru](https://zayka-chitayka.ru)
+
 ## Запуск
 
 ```bash
@@ -9,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Откройте адрес из терминала (обычно `http://localhost:5173/zayka-chitayka/`).
+Откройте адрес из терминала (обычно `http://localhost:5173/`).
 
 ## Сборка
 
@@ -18,13 +20,19 @@ npm run build
 npm run preview
 ```
 
-## Деплой на GitHub Pages
+## Деплой на Beget
 
-1. Репозиторий: **`zayka-chitayka`** (имя важно: в `vite.config.ts` задан `base: "/zayka-chitayka/"`).
-2. В GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. После успешного workflow приложение будет по адресу:
+После `git push` в `main` GitHub Actions собирает проект и заливает `dist/` на Beget по SSH (rsync).
 
-`https://shamilfrontend.github.io/zayka-chitayka/`
+Нужные secrets в репозитории (Settings → Secrets and variables → Actions):
+
+| Secret | Назначение |
+|--------|------------|
+| `SSH_PRIVATE_KEY` | Приватный ключ деплоя |
+| `SSH_HOST` | Хост Beget |
+| `SSH_PORT` | Порт SSH |
+| `SSH_USER` | SSH-пользователь |
+| `DEPLOY_PATH` | Путь к корню сайта на сервере |
 
 Workflow: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
