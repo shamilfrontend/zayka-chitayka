@@ -46,7 +46,7 @@
 
 @media (min-width: 540px) {
   .modes {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -76,6 +76,14 @@
   animation-delay: 0.24s;
 }
 
+.mode:nth-child(4) {
+  animation-delay: 0.32s;
+}
+
+.mode:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
 .mode:active {
   transform: scale(0.97) translateY(2px);
 }
@@ -90,6 +98,14 @@
 
 .sky {
   background: var(--color-sky);
+}
+
+.lilac {
+  background: var(--color-lilac);
+}
+
+.butter {
+  background: var(--color-butter);
 }
 
 .modeTitle {

@@ -1,0 +1,31 @@
+---
+description: Порядок секций в Vue SFC — script, template, style
+globs: "**/*.vue"
+alwaysApply: false
+---
+
+# Vue-компоненты
+
+В однофайловых компонентах (`.vue`) секции всегда в таком порядке:
+
+1. `<script>`
+2. `<template>`
+3. `<style>` (если есть)
+
+```vue
+<script setup lang="ts">
+// логика компонента
+</script>
+
+<template>
+  <!-- разметка -->
+</template>
+
+<style scoped>
+/* стили */
+</style>
+```
+
+- Не ставь `<template>` перед `<script>`.
+- Пропускай `<style>`, если стили вынесены в CSS Modules / отдельный файл.
+- Используй `<script setup lang="ts">`, если в проекте уже принят Composition API + TypeScript.

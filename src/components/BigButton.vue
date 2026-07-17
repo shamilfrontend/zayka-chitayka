@@ -1,20 +1,3 @@
-<template>
-  <button
-    :type="type"
-    :class="[
-      styles.btn,
-      styles[variant],
-      styles[size],
-      fullWidth ? styles.full : '',
-    ]"
-    :disabled="disabled"
-    v-bind="$attrs"
-    @click="$emit('click', $event)"
-  >
-    <slot />
-  </button>
-</template>
-
 <script setup lang="ts">
 import styles from "./BigButton.module.css";
 
@@ -41,3 +24,20 @@ defineEmits<{
   click: [event: MouseEvent];
 }>();
 </script>
+
+<template>
+  <button
+    :type="type"
+    :class="[
+      styles.btn,
+      styles[variant],
+      styles[size],
+      fullWidth ? styles.full : '',
+    ]"
+    :disabled="disabled"
+    v-bind="$attrs"
+    @click="$emit('click', $event)"
+  >
+    <slot />
+  </button>
+</template>

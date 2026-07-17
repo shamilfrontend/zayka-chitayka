@@ -1,14 +1,16 @@
+<script setup lang="ts">
+import { RouterView } from "vue-router";
+import CookieConsentBanner from "./components/CookieConsentBanner.vue";
+</script>
+
 <template>
   <RouterView v-slot="{ Component }">
     <Transition name="page" mode="out-in">
       <component :is="Component" />
     </Transition>
   </RouterView>
+  <CookieConsentBanner />
 </template>
-
-<script setup lang="ts">
-import { RouterView } from "vue-router";
-</script>
 
 <style>
 .page-enter-active,

@@ -16,7 +16,9 @@
 
 .letterCard,
 .syllableCard,
-.wordCard {
+.wordCard,
+.numberCard,
+.integerCard {
   position: relative;
   width: 100%;
   min-height: 240px;
@@ -42,10 +44,22 @@
   line-height: 1;
 }
 
+.numberCard .giant,
+.integerCard .giant {
+  font-size: clamp(4.2rem, 18vw, 6rem);
+}
+
 .hint {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--color-ink-soft);
+}
+
+.numberCard .hint,
+.integerCard .hint {
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  text-align: center;
 }
 
 .emoji {

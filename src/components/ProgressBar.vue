@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import styles from "./ProgressBar.module.css";
+
+const props = defineProps<{
+  lettersPassed: boolean;
+  syllablesPassed: boolean;
+  wordsPassed: boolean;
+  numbersPassed: boolean;
+  integersPassed: boolean;
+}>();
+
+const SECTIONS_TOTAL = 5;
+
+const percent = computed(() => {
+  const done =
+    Number(props.lettersPassed) +
+    Number(props.syllablesPassed) +
+    Number(props.wordsPassed) +
+    Number(props.numbersPassed) +
+    Number(props.integersPassed);
+  return Math.min(100, Math.round((done / SECTIONS_TOTAL) * 100));
+});
+</script>
+
 <template>
   <div :class="styles.wrap">
     <div :class="styles.top">
@@ -17,27 +42,8 @@
       <span>Буквы {{ lettersPassed ? "✓" : "—" }}</span>
       <span>Слоги {{ syllablesPassed ? "✓" : "—" }}</span>
       <span>Слова {{ wordsPassed ? "✓" : "—" }}</span>
+      <span>Цифры {{ numbersPassed ? "✓" : "—" }}</span>
+      <span>Числа {{ integersPassed ? "✓" : "—" }}</span>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import styles from "./ProgressBar.module.css";
-
-const props = defineProps<{
-  lettersPassed: boolean;
-  syllablesPassed: boolean;
-  wordsPassed: boolean;
-}>();
-
-const SECTIONS_TOTAL = 3;
-
-const percent = computed(() => {
-  const done =
-    Number(props.lettersPassed) +
-    Number(props.syllablesPassed) +
-    Number(props.wordsPassed);
-  return Math.min(100, Math.round((done / SECTIONS_TOTAL) * 100));
-});
-</script>

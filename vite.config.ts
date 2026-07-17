@@ -12,7 +12,7 @@ export default defineConfig({
       manifest: {
         name: "Зайка-Читайка",
         short_name: "Читайка",
-        description: "Учимся читать по-русски: буквы, слоги и слова",
+        description: "Учимся читать и считать по-русски: буквы, слоги, слова, цифры и числа",
         theme_color: "#7ec8a3",
         background_color: "#fff8f0",
         display: "standalone",

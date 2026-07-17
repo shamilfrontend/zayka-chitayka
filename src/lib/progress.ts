@@ -1,6 +1,11 @@
 const STORAGE_KEY = "reader-bunny-progress";
 
-export type SectionId = "letters" | "syllables" | "words";
+export type SectionId =
+  | "letters"
+  | "syllables"
+  | "words"
+  | "numbers"
+  | "integers";
 
 type SectionsPassed = Partial<Record<SectionId, boolean>>;
 
@@ -8,6 +13,8 @@ export interface Progress {
   lettersLearned: string[];
   syllablesLearned: string[];
   wordsLearned: string[];
+  numbersLearned: string[];
+  integersLearned: string[];
   sectionsPassed: SectionsPassed;
 }
 
@@ -15,10 +22,57 @@ const DEFAULT_PROGRESS: Progress = {
   lettersLearned: [],
   syllablesLearned: [],
   wordsLearned: [],
+  numbersLearned: [],
+  integersLearned: [],
   sectionsPassed: {},
 };
 
-const SECTION_IDS: SectionId[] = ["letters", "syllables", "words"];
+const SECTION_IDS: SectionId[] = [
+  "letters",
+  "syllables",
+  "words",
+  "numbers",
+  "integers",
+];
+
+const DIGIT_KEYS = new Set([
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+]);
+
+function parseNumbersLearned(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.filter(
+    (item): item is string =>
+      typeof item === "string" && DIGIT_KEYS.has(item),
+  );
+}
+
+function parseIntegersLearned(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.filter((item): item is string => {
+    if (typeof item !== "string") {
+      return false;
+    }
+
+    const parsed = Number(item);
+    return Number.isInteger(parsed) && parsed >= 0 && parsed <= 100;
+  });
+}
 
 /** Миграция со старого формата sectionsPassed по уровням */
 function parseSectionsPassed(value: unknown): SectionsPassed {
@@ -66,6 +120,8 @@ export function loadProgress(): Progress {
       lettersLearned: parsed.lettersLearned ?? [],
       syllablesLearned: parsed.syllablesLearned ?? [],
       wordsLearned: parsed.wordsLearned ?? [],
+      numbersLearned: parseNumbersLearned(parsed.numbersLearned),
+      integersLearned: parseIntegersLearned(parsed.integersLearned),
       sectionsPassed: parseSectionsPassed(parsed.sectionsPassed),
     };
   } catch {
@@ -130,12 +186,36 @@ export function markWordLearned(text: string): Progress {
   return progress;
 }
 
+export function markNumberLearned(digit: string): Progress {
+  const progress = loadProgress();
+
+  if (!progress.numbersLearned.includes(digit)) {
+    progress.numbersLearned = [...progress.numbersLearned, digit];
+    saveProgress(progress);
+  }
+
+  return progress;
+}
+
+export function markIntegerLearned(text: string): Progress {
+  const progress = loadProgress();
+
+  if (!progress.integersLearned.includes(text)) {
+    progress.integersLearned = [...progress.integersLearned, text];
+    saveProgress(progress);
+  }
+
+  return progress;
+}
+
 export function resetProgress(): Progress {
   const next: Progress = {
     ...DEFAULT_PROGRESS,
     lettersLearned: [],
     syllablesLearned: [],
     wordsLearned: [],
+    numbersLearned: [],
+    integersLearned: [],
     sectionsPassed: {},
   };
   saveProgress(next);

@@ -11,10 +11,15 @@ interface UseSectionTestOptions<T> {
   choiceCount: number;
   onAsk: (target: T) => void;
   onFinish: (passed: boolean) => void;
+  /** Один раз при показе каждого нового вопроса, до озвучки */
+  onNewQuestion?: (target: T) => void;
+  /** Если задано — случайная выборка из пула вместо всех элементов */
+  questionLimit?: number;
 }
 
 /**
- * Итоговый тест раздела: один вопрос на каждый элемент,
+ * Итоговый тест раздела: один вопрос на каждый элемент
+ * (или на выборку, если задан questionLimit),
  * одна попытка, затем экран результата.
  */
 export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
@@ -61,6 +66,16 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
     }
   };
 
+  const presentQuestion = () => {
+    const current = target.value;
+    if (!current || phase.value !== "question") {
+      return;
+    }
+
+    options.onNewQuestion?.(current);
+    ask();
+  };
+
   const finish = () => {
     phase.value = "result";
     options.onFinish(passed.value);
@@ -76,12 +91,17 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
 
     index.value += 1;
     syncChoices();
-    ask();
+    presentQuestion();
   };
 
   const start = () => {
     clearAdvanceTimer();
-    queue.value = shuffle(options.pool());
+    const fullPool = options.pool();
+    const limit = options.questionLimit;
+    queue.value =
+      limit !== undefined && limit > 0 && limit < fullPool.length
+        ? shuffle(fullPool).slice(0, limit)
+        : shuffle(fullPool);
     index.value = 0;
     errors.value = 0;
     feedback.value = "idle";
@@ -89,7 +109,7 @@ export function useSectionTest<T>(options: UseSectionTestOptions<T>) {
     syncChoices();
 
     if (phase.value === "question") {
-      ask();
+      presentQuestion();
     }
   };
 

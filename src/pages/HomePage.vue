@@ -1,45 +1,3 @@
-<template>
-  <div :class="styles.home">
-    <div :class="styles.hero">
-      <BunnyMascot size="lg" mood="idle" />
-      <h1 :class="styles.brand">Зайка-Читайка</h1>
-      <p :class="styles.tagline">Давай учиться читать вместе!</p>
-    </div>
-
-    <ProgressBar
-      :letters-passed="lettersPassed"
-      :syllables-passed="syllablesPassed"
-      :words-passed="wordsPassed"
-    />
-
-    <nav :class="styles.modes" aria-label="Режимы обучения">
-      <RouterLink
-        v-for="mode in modes"
-        :key="mode.to"
-        :to="mode.to"
-        :class="[
-          styles.mode,
-          styles[mode.variant],
-          { [styles.modePassed]: mode.passed },
-        ]"
-      >
-        <span :class="styles.modeTitle">{{ mode.title }}</span>
-        <span :class="styles.modeSub">{{ mode.subtitle }}</span>
-      </RouterLink>
-    </nav>
-
-    <nav :class="styles.footerLinks" aria-label="Дополнительно">
-      <RouterLink :to="'/settings'" :class="styles.footerLink">
-        Настройки
-      </RouterLink>
-      <span :class="styles.footerDot" aria-hidden="true">·</span>
-      <RouterLink :to="'/about'" :class="styles.footerLink">
-        Об авторе
-      </RouterLink>
-    </nav>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
@@ -52,12 +10,18 @@ const {
   letters,
   syllables,
   words,
+  numbers,
+  integers,
   lettersDone,
   syllablesDone,
   wordsDone,
+  numbersDone,
+  integersDone,
   lettersPassed,
   syllablesPassed,
   wordsPassed,
+  numbersPassed,
+  integersPassed,
 } = useLevelContent();
 
 const modes = computed(() => [
@@ -82,5 +46,67 @@ const modes = computed(() => [
     variant: "sky" as const,
     passed: wordsPassed.value,
   },
+  {
+    to: "/numbers",
+    title: "Цифры",
+    subtitle: `Изучено ${numbersDone.value} из ${numbers.value.length}`,
+    variant: "lilac" as const,
+    passed: numbersPassed.value,
+  },
+  {
+    to: "/integers",
+    title: "Числа",
+    subtitle: `Изучено ${integersDone.value} из ${integers.value.length}`,
+    variant: "butter" as const,
+    passed: integersPassed.value,
+  },
 ]);
 </script>
+
+<template>
+  <div :class="styles.home">
+    <div :class="styles.hero">
+      <BunnyMascot size="lg" mood="idle" />
+      <h1 :class="styles.brand">Зайка-Читайка</h1>
+      <p :class="styles.tagline">Давай учиться читать и считать вместе!</p>
+    </div>
+
+    <ProgressBar
+      :letters-passed="lettersPassed"
+      :syllables-passed="syllablesPassed"
+      :words-passed="wordsPassed"
+      :numbers-passed="numbersPassed"
+      :integers-passed="integersPassed"
+    />
+
+    <nav :class="styles.modes" aria-label="Режимы обучения">
+      <RouterLink
+        v-for="mode in modes"
+        :key="mode.to"
+        :to="mode.to"
+        :class="[
+          styles.mode,
+          styles[mode.variant],
+          { [styles.modePassed]: mode.passed },
+        ]"
+      >
+        <span :class="styles.modeTitle">{{ mode.title }}</span>
+        <span :class="styles.modeSub">{{ mode.subtitle }}</span>
+      </RouterLink>
+    </nav>
+
+    <nav :class="styles.footerLinks" aria-label="Дополнительно">
+      <RouterLink :to="'/settings'" :class="styles.footerLink">
+        Настройки
+      </RouterLink>
+      <span :class="styles.footerDot" aria-hidden="true">·</span>
+      <RouterLink :to="'/about'" :class="styles.footerLink">
+        Об авторах
+      </RouterLink>
+      <span :class="styles.footerDot" aria-hidden="true">·</span>
+      <RouterLink :to="'/privacy'" :class="styles.footerLink">
+        Конфиденциальность
+      </RouterLink>
+    </nav>
+  </div>
+</template>

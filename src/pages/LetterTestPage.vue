@@ -1,3 +1,49 @@
+<script setup lang="ts">
+import BigButton from "../components/BigButton.vue";
+import BunnyMascot from "../components/BunnyMascot.vue";
+import PageShell from "../components/PageShell.vue";
+import SectionResult from "../components/SectionResult.vue";
+import type { Letter } from "../data/letters";
+import { useLevelContent } from "../composables/useLevelContent";
+import { useProgress } from "../composables/useProgress";
+import { useSectionTest } from "../composables/useSectionTest";
+import { speakRussian } from "../lib/speech";
+import { playSuccess } from "../lib/sounds";
+import styles from "./Quiz.module.css";
+
+const { letters } = useLevelContent();
+const { passSection } = useProgress();
+
+const {
+  target,
+  choices,
+  feedback,
+  errors,
+  phase,
+  passed,
+  counterLabel,
+  ask,
+  pick,
+  choiceVariant,
+} = useSectionTest<Letter>({
+  pool: () => letters.value,
+  getKey: (letter) => letter.char,
+  choiceCount: 4,
+  onAsk: (letter) => {
+    speakRussian(`Где буква ${letter.char}?`);
+  },
+  onFinish: (didPass) => {
+    if (didPass) {
+      passSection("letters");
+      playSuccess();
+      speakRussian("Молодец!");
+    } else {
+      speakRussian("Давай повторим");
+    }
+  },
+});
+</script>
+
 <template>
   <PageShell title="Проверка букв" back-to="/letters">
     <SectionResult
@@ -48,49 +94,3 @@
     </template>
   </PageShell>
 </template>
-
-<script setup lang="ts">
-import BigButton from "../components/BigButton.vue";
-import BunnyMascot from "../components/BunnyMascot.vue";
-import PageShell from "../components/PageShell.vue";
-import SectionResult from "../components/SectionResult.vue";
-import type { Letter } from "../data/letters";
-import { useLevelContent } from "../composables/useLevelContent";
-import { useProgress } from "../composables/useProgress";
-import { useSectionTest } from "../composables/useSectionTest";
-import { speakRussian } from "../lib/speech";
-import { playSuccess } from "../lib/sounds";
-import styles from "./Quiz.module.css";
-
-const { letters } = useLevelContent();
-const { passSection } = useProgress();
-
-const {
-  target,
-  choices,
-  feedback,
-  errors,
-  phase,
-  passed,
-  counterLabel,
-  ask,
-  pick,
-  choiceVariant,
-} = useSectionTest<Letter>({
-  pool: () => letters.value,
-  getKey: (letter) => letter.char,
-  choiceCount: 4,
-  onAsk: (letter) => {
-    speakRussian(`Где буква ${letter.char}?`);
-  },
-  onFinish: (didPass) => {
-    if (didPass) {
-      passSection("letters");
-      playSuccess();
-      speakRussian("Молодец!");
-    } else {
-      speakRussian("Давай повторим");
-    }
-  },
-});
-</script>

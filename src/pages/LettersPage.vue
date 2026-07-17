@@ -1,3 +1,32 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+import BigButton from "../components/BigButton.vue";
+import BunnyMascot from "../components/BunnyMascot.vue";
+import PageShell from "../components/PageShell.vue";
+import { useLearnDeck } from "../composables/useLearnDeck";
+import { useLevelContent } from "../composables/useLevelContent";
+import { useProgress } from "../composables/useProgress";
+import { speakRussian } from "../lib/speech";
+import styles from "./Learn.module.css";
+
+const router = useRouter();
+const { learnLetter, progress } = useProgress();
+const { letters } = useLevelContent();
+
+const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
+  useLearnDeck({
+    items: letters,
+    speakItem: (letter) => speakRussian(letter.name),
+    markLearned: (letter) => learnLetter(letter.char),
+    isItemLearned: (letter) =>
+      progress.value.lettersLearned.includes(letter.char),
+    sectionId: "letters",
+  });
+
+const letter = computed(() => item.value!);
+</script>
+
 <template>
   <PageShell title="Буквы">
     <div v-if="showOffer" :class="styles.offer">
@@ -70,32 +99,3 @@
     </template>
   </PageShell>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import { useRouter } from "vue-router";
-import BigButton from "../components/BigButton.vue";
-import BunnyMascot from "../components/BunnyMascot.vue";
-import PageShell from "../components/PageShell.vue";
-import { useLearnDeck } from "../composables/useLearnDeck";
-import { useLevelContent } from "../composables/useLevelContent";
-import { useProgress } from "../composables/useProgress";
-import { speakRussian } from "../lib/speech";
-import styles from "./Learn.module.css";
-
-const router = useRouter();
-const { learnLetter, progress } = useProgress();
-const { letters } = useLevelContent();
-
-const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
-  useLearnDeck({
-    items: letters,
-    speakItem: (letter) => speakRussian(letter.name),
-    markLearned: (letter) => learnLetter(letter.char),
-    isItemLearned: (letter) =>
-      progress.value.lettersLearned.includes(letter.char),
-    sectionId: "letters",
-  });
-
-const letter = computed(() => item.value!);
-</script>

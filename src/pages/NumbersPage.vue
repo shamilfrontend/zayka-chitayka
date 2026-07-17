@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 import BigButton from "../components/BigButton.vue";
 import BunnyMascot from "../components/BunnyMascot.vue";
+import CountDots from "../components/CountDots.vue";
 import PageShell from "../components/PageShell.vue";
 import { useLearnDeck } from "../composables/useLearnDeck";
 import { useLevelContent } from "../composables/useLevelContent";
@@ -11,35 +12,35 @@ import { speakRussian } from "../lib/speech";
 import styles from "./Learn.module.css";
 
 const router = useRouter();
-const { learnWord, progress } = useProgress();
-const { words } = useLevelContent();
+const { learnNumber, progress } = useProgress();
+const { numbers } = useLevelContent();
 
 const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
   useLearnDeck({
-    items: words,
-    speakItem: (word) => speakRussian(word.hint),
-    markLearned: (word) => learnWord(word.text),
-    isItemLearned: (word) =>
-      progress.value.wordsLearned.includes(word.text),
-    sectionId: "words",
+    items: numbers,
+    speakItem: (entry) => speakRussian(entry.name),
+    markLearned: (entry) => learnNumber(entry.digit),
+    isItemLearned: (entry) =>
+      progress.value.numbersLearned.includes(entry.digit),
+    sectionId: "numbers",
   });
 
-const word = computed(() => item.value!);
+const number = computed(() => item.value!);
 </script>
 
 <template>
-  <PageShell title="Слова">
+  <PageShell title="Цифры">
     <div v-if="showOffer" :class="styles.offer">
       <BunnyMascot size="md" mood="cheer" />
       <h2 :class="styles.offerTitle">Пора проверить!</h2>
       <p :class="styles.offerText">
-        Ты посмотрел все слова. Пройди тест, чтобы сдать раздел.
+        Ты посмотрел все цифры. Пройди тест, чтобы сдать раздел.
       </p>
       <BigButton
         variant="peach"
         size="lg"
         full-width
-        @click="router.push('/words/test')"
+        @click="router.push('/numbers/test')"
       >
         Начать проверку
       </BigButton>
@@ -51,37 +52,29 @@ const word = computed(() => item.value!);
     <template v-else>
       <div :class="styles.cardWrap">
         <button
-          :key="word.text"
+          :key="number.digit"
           type="button"
-          :class="styles.wordCard"
-          :aria-label="`Слово ${word.text}, произнести`"
-          @click="speakRussian(word.hint)"
+          :class="styles.numberCard"
+          :aria-label="`Цифра ${number.digit}, ${number.name}, произнести`"
+          @click="speakRussian(number.name)"
         >
-          <span :class="styles.emoji" aria-hidden="true">{{ word.emoji }}</span>
-          <span :class="styles.wordText">{{ word.text }}</span>
-          <div :class="styles.syllables">
-            <span
-              v-for="(part, i) in word.syllables"
-              :key="`${part}-${i}`"
-              :class="styles.syllableChip"
-            >
-              {{ part }}
-            </span>
-          </div>
+          <span :class="styles.giant">{{ number.digit }}</span>
+          <span :class="styles.hint">{{ number.name }}</span>
+          <CountDots :count="number.value" size="md" />
           <span v-if="learned" :class="styles.badge">✓</span>
         </button>
       </div>
 
-      <p :class="styles.counter">{{ index + 1 }} / {{ words.length }}</p>
+      <p :class="styles.counter">{{ index + 1 }} / {{ numbers.length }}</p>
 
       <div :class="styles.row">
-        <BigButton variant="cream" aria-label="Предыдущее" @click="goPrev">
+        <BigButton variant="cream" aria-label="Предыдущая" @click="goPrev">
           ←
         </BigButton>
-        <BigButton variant="mint" size="lg" @click="speakRussian(word.hint)">
+        <BigButton variant="mint" size="lg" @click="speakRussian(number.name)">
           Слушать
         </BigButton>
-        <BigButton variant="cream" aria-label="Следующее" @click="goNext">
+        <BigButton variant="cream" aria-label="Следующая" @click="goNext">
           →
         </BigButton>
       </div>
@@ -92,7 +85,7 @@ const word = computed(() => item.value!);
           variant="peach"
           size="lg"
           full-width
-          @click="router.push('/words/test')"
+          @click="router.push('/numbers/test')"
         >
           Проверка
         </BigButton>
@@ -100,9 +93,9 @@ const word = computed(() => item.value!);
           :variant="readyForTest ? 'cream' : 'peach'"
           size="lg"
           full-width
-          @click="router.push('/words/quiz')"
+          @click="router.push('/numbers/quiz')"
         >
-          Игра: какое слово?
+          Игра: найди цифру
         </BigButton>
       </div>
     </template>

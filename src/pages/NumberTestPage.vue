@@ -1,18 +1,27 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import BigButton from "../components/BigButton.vue";
 import BunnyMascot from "../components/BunnyMascot.vue";
+import CountDots from "../components/CountDots.vue";
 import PageShell from "../components/PageShell.vue";
 import SectionResult from "../components/SectionResult.vue";
-import type { Syllable } from "../data/syllables";
+import type { NumberItem } from "../data/numbers";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { useSectionTest } from "../composables/useSectionTest";
 import { speakRussian } from "../lib/speech";
 import { playSuccess } from "../lib/sounds";
 import styles from "./Quiz.module.css";
+import quizStyles from "./NumberQuiz.module.css";
 
-const { syllables } = useLevelContent();
+type PromptMode = "name" | "count";
+
+const { numbers } = useLevelContent();
 const { passSection } = useProgress();
+const promptMode = ref<PromptMode>("name");
+
+const pickPromptMode = (): PromptMode =>
+  Math.random() < 0.5 ? "name" : "count";
 
 const {
   target,
@@ -25,16 +34,24 @@ const {
   ask,
   pick,
   choiceVariant,
-} = useSectionTest<Syllable>({
-  pool: () => syllables.value,
-  getKey: (syllable) => syllable.text,
+} = useSectionTest<NumberItem>({
+  pool: () => numbers.value,
+  getKey: (entry) => entry.digit,
   choiceCount: 4,
-  onAsk: (syllable) => {
-    speakRussian(`Где слог ${syllable.text.toLowerCase()}?`);
+  onNewQuestion: () => {
+    promptMode.value = pickPromptMode();
+  },
+  onAsk: (entry) => {
+    if (promptMode.value === "name") {
+      speakRussian(`Где цифра ${entry.name}?`);
+      return;
+    }
+
+    speakRussian("Сколько это? Найди цифру");
   },
   onFinish: (didPass) => {
     if (didPass) {
-      passSection("syllables");
+      passSection("numbers");
       playSuccess();
       speakRussian("Молодец!");
     } else {
@@ -45,12 +62,12 @@ const {
 </script>
 
 <template>
-  <PageShell title="Проверка слогов" back-to="/syllables">
+  <PageShell title="Проверка цифр" back-to="/numbers">
     <SectionResult
       v-if="phase === 'result'"
       :passed="passed"
       :errors="errors"
-      fail-back-to="/syllables"
+      fail-back-to="/numbers"
     />
 
     <template v-else>
@@ -65,26 +82,30 @@ const {
                 : 'think'
           "
         />
-        <p :class="styles.question">
-          Где слог <strong>{{ target?.text }}</strong>?
+        <p v-if="promptMode === 'name'" :class="styles.question">
+          Где цифра <strong>{{ target?.name }}</strong>?
         </p>
+        <div v-else :class="quizStyles.countPrompt">
+          <p :class="styles.question">Сколько это?</p>
+          <CountDots :count="target?.value ?? 0" size="lg" />
+        </div>
         <BigButton variant="ghost" @click="ask">🔊 Ещё раз</BigButton>
       </div>
 
       <div :class="styles.grid">
         <div
-          v-for="syllable in choices"
-          :key="syllable.text"
+          v-for="entry in choices"
+          :key="entry.digit"
           :class="styles.choiceWrap"
         >
           <BigButton
             size="xl"
-            :variant="choiceVariant(syllable, 'mint', 'sky')"
-            :aria-label="`Слог ${syllable.text}`"
+            :variant="choiceVariant(entry, 'mint', 'sky')"
+            :aria-label="`Цифра ${entry.digit}`"
             :disabled="feedback !== 'idle'"
-            @click="pick(syllable)"
+            @click="pick(entry)"
           >
-            {{ syllable.text }}
+            {{ entry.digit }}
           </BigButton>
         </div>
       </div>

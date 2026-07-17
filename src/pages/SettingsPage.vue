@@ -1,9 +1,24 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import PageShell from "../components/PageShell.vue";
+import { useProgress } from "../composables/useProgress";
+import styles from "./SettingsPage.module.css";
+
+const { reset } = useProgress();
+const confirmReset = ref(false);
+
+const doReset = () => {
+  reset();
+  confirmReset.value = false;
+};
+</script>
+
 <template>
   <PageShell title="Настройки">
     <section :class="styles.section" aria-labelledby="reset-heading">
       <h2 id="reset-heading" :class="styles.sectionTitle">Прогресс</h2>
       <p :class="styles.sectionHint">
-        Изученные буквы, слоги, слова и сданные разделы обнулятся.
+        Изученные буквы, слоги, слова, цифры, числа и сданные разделы обнулятся.
       </p>
 
       <div :class="styles.resetZone">
@@ -39,18 +54,3 @@
     </section>
   </PageShell>
 </template>
-
-<script setup lang="ts">
-import { ref } from "vue";
-import PageShell from "../components/PageShell.vue";
-import { useProgress } from "../composables/useProgress";
-import styles from "./SettingsPage.module.css";
-
-const { reset } = useProgress();
-const confirmReset = ref(false);
-
-const doReset = () => {
-  reset();
-  confirmReset.value = false;
-};
-</script>

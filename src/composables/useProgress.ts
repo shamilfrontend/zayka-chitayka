@@ -2,7 +2,9 @@ import { ref } from "vue";
 import {
   isSectionPassed,
   loadProgress,
+  markIntegerLearned,
   markLetterLearned,
+  markNumberLearned,
   markSectionPassed as persistSectionPassed,
   markSyllableLearned,
   markWordLearned,
@@ -27,6 +29,14 @@ export function useProgress() {
     progress.value = markWordLearned(text);
   };
 
+  const learnNumber = (digit: string) => {
+    progress.value = markNumberLearned(digit);
+  };
+
+  const learnInteger = (text: string) => {
+    progress.value = markIntegerLearned(text);
+  };
+
   const passSection = (section: SectionId) => {
     progress.value = persistSectionPassed(section);
   };
@@ -44,6 +54,8 @@ export function useProgress() {
     learnLetter,
     learnSyllable,
     learnWord,
+    learnNumber,
+    learnInteger,
     passSection,
     sectionPassed,
     reset,

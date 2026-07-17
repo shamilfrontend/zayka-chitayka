@@ -1,17 +1,21 @@
 import { computed } from "vue";
+import { INTEGERS } from "../data/integers";
 import { LETTERS } from "../data/letters";
+import { NUMBERS } from "../data/numbers";
 import { INTRO_SYLLABLES } from "../data/syllables";
 import { WORDS } from "../data/words";
 import { isSectionPassed } from "../lib/progress";
 import { useProgress } from "./useProgress";
 
-/** Контент букв / слогов / слов для обучения */
+/** Контент разделов обучения */
 export function useLevelContent() {
   const { progress } = useProgress();
 
   const letters = computed(() => LETTERS);
   const syllables = computed(() => INTRO_SYLLABLES);
   const words = computed(() => WORDS);
+  const numbers = computed(() => NUMBERS);
+  const integers = computed(() => INTEGERS);
 
   const lettersDone = computed(
     () =>
@@ -34,6 +38,20 @@ export function useLevelContent() {
       ).length,
   );
 
+  const numbersDone = computed(
+    () =>
+      numbers.value.filter((n) =>
+        progress.value.numbersLearned.includes(n.digit),
+      ).length,
+  );
+
+  const integersDone = computed(
+    () =>
+      integers.value.filter((n) =>
+        progress.value.integersLearned.includes(n.text),
+      ).length,
+  );
+
   const lettersPassed = computed(() =>
     isSectionPassed(progress.value, "letters"),
   );
@@ -44,15 +62,29 @@ export function useLevelContent() {
 
   const wordsPassed = computed(() => isSectionPassed(progress.value, "words"));
 
+  const numbersPassed = computed(() =>
+    isSectionPassed(progress.value, "numbers"),
+  );
+
+  const integersPassed = computed(() =>
+    isSectionPassed(progress.value, "integers"),
+  );
+
   return {
     letters,
     syllables,
     words,
+    numbers,
+    integers,
     lettersDone,
     syllablesDone,
     wordsDone,
+    numbersDone,
+    integersDone,
     lettersPassed,
     syllablesPassed,
     wordsPassed,
+    numbersPassed,
+    integersPassed,
   };
 }

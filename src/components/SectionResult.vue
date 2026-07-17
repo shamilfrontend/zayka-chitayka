@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+import BigButton from "./BigButton.vue";
+import BunnyMascot from "./BunnyMascot.vue";
+import styles from "./SectionResult.module.css";
+
+defineProps<{
+  passed: boolean;
+  errors: number;
+  failBackTo: string;
+}>();
+
+const router = useRouter();
+</script>
+
 <template>
   <div :class="styles.result">
     <BunnyMascot size="md" :mood="passed ? 'cheer' : 'sad'" />
@@ -33,18 +48,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useRouter } from "vue-router";
-import BigButton from "./BigButton.vue";
-import BunnyMascot from "./BunnyMascot.vue";
-import styles from "./SectionResult.module.css";
-
-defineProps<{
-  passed: boolean;
-  errors: number;
-  failBackTo: string;
-}>();
-
-const router = useRouter();
-</script>

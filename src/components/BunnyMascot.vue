@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import styles from "./BunnyMascot.module.css";
+
+type BunnyMood = "idle" | "think" | "cheer" | "sad";
+
+const props = withDefaults(
+  defineProps<{
+    mood?: BunnyMood;
+    size?: "sm" | "md" | "lg";
+  }>(),
+  {
+    mood: "idle",
+    size: "md",
+  },
+);
+
+const showBook = computed(
+  () => props.mood === "idle" || props.mood === "think",
+);
+</script>
+
 <template>
   <div
     :class="[styles.wrap, styles[size], styles[mood]]"
@@ -144,25 +166,3 @@
     </svg>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import styles from "./BunnyMascot.module.css";
-
-type BunnyMood = "idle" | "think" | "cheer" | "sad";
-
-const props = withDefaults(
-  defineProps<{
-    mood?: BunnyMood;
-    size?: "sm" | "md" | "lg";
-  }>(),
-  {
-    mood: "idle",
-    size: "md",
-  },
-);
-
-const showBook = computed(
-  () => props.mood === "idle" || props.mood === "think",
-);
-</script>

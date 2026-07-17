@@ -17,6 +17,8 @@ interface UseQuizRoundOptions<T> {
   choiceCount: number;
   onAsk: (target: T) => void;
   onCorrect: (item: T) => void;
+  /** Один раз при старте раунда, до озвучки */
+  onNewRound?: (target: T) => void;
   successPhrase?: string | ((item: T) => string);
   idleVariant?: ButtonVariant;
   correctVariant?: ButtonVariant;
@@ -67,7 +69,14 @@ export function useQuizRound<T>(options: UseQuizRoundOptions<T>) {
     }
   };
 
-  watch(round, () => ask(), { immediate: true });
+  watch(
+    round,
+    (value) => {
+      options.onNewRound?.(value.target);
+      ask();
+    },
+    { immediate: true },
+  );
 
   onUnmounted(clearTimers);
 
