@@ -29,7 +29,7 @@ const numbersPassedCount = computed(
 const hubs = computed(() => [
   {
     to: "/learn/words",
-    title: "Учить буквы и слова",
+    title: "Учить слова",
     subtitle: `Сдано ${wordsPassedCount.value} из 3`,
     variant: "mint" as const,
     passed: wordsPassedCount.value === 3,
