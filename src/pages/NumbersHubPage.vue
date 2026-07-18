@@ -29,6 +29,20 @@ const modes = computed(() => [
     variant: "butter" as const,
     passed: integersPassed.value,
   },
+  {
+    to: "/addition",
+    title: "Сложение",
+    subtitle: "Игра: примеры на плюс",
+    variant: "mint" as const,
+    passed: false,
+  },
+  {
+    to: "/subtraction",
+    title: "Вычитание",
+    subtitle: "Игра: примеры на минус",
+    variant: "sky" as const,
+    passed: false,
+  },
 ]);
 </script>
 

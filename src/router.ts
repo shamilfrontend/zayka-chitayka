@@ -11,6 +11,7 @@ import NumberTestPage from "./pages/NumberTestPage.vue";
 import IntegersPage from "./pages/IntegersPage.vue";
 import IntegerQuizPage from "./pages/IntegerQuizPage.vue";
 import IntegerTestPage from "./pages/IntegerTestPage.vue";
+import EquationPlayPage from "./pages/EquationPlayPage.vue";
 import SyllablesPage from "./pages/SyllablesPage.vue";
 import SyllableQuizPage from "./pages/SyllableQuizPage.vue";
 import SyllableTestPage from "./pages/SyllableTestPage.vue";
@@ -21,6 +22,7 @@ import SettingsPage from "./pages/SettingsPage.vue";
 import AboutPage from "./pages/AboutPage.vue";
 import PrivacyPage from "./pages/PrivacyPage.vue";
 import { trackPageHit } from "./lib/analytics";
+import type { EquationOp } from "./data/equations";
 
 const PAGE_TRANSITION_MS = 220;
 
@@ -48,6 +50,16 @@ export const router = createRouter({
     { path: "/integers", component: IntegersPage },
     { path: "/integers/quiz", component: IntegerQuizPage },
     { path: "/integers/test", component: IntegerTestPage },
+    {
+      path: "/addition",
+      component: EquationPlayPage,
+      meta: { equationOp: "add" satisfies EquationOp },
+    },
+    {
+      path: "/subtraction",
+      component: EquationPlayPage,
+      meta: { equationOp: "sub" satisfies EquationOp },
+    },
     { path: "/:pathMatch(.*)*", redirect: "/" },
   ],
   // Ждём out-in transition в App.vue, иначе на мобилках остаётся scrollY с прошлой страницы
