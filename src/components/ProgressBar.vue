@@ -38,12 +38,5 @@ const percent = computed(() => {
     >
       <div :class="styles.fill" :style="{ width: `${percent}%` }" />
     </div>
-    <div :class="styles.stats">
-      <span>Буквы {{ lettersPassed ? "✓" : "—" }}</span>
-      <span>Слоги {{ syllablesPassed ? "✓" : "—" }}</span>
-      <span>Слова {{ wordsPassed ? "✓" : "—" }}</span>
-      <span>Цифры {{ numbersPassed ? "✓" : "—" }}</span>
-      <span>Числа {{ integersPassed ? "✓" : "—" }}</span>
-    </div>
   </div>
 </template>

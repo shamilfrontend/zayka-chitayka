@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "./pages/HomePage.vue";
+import WordsHubPage from "./pages/WordsHubPage.vue";
+import NumbersHubPage from "./pages/NumbersHubPage.vue";
 import LettersPage from "./pages/LettersPage.vue";
 import LetterQuizPage from "./pages/LetterQuizPage.vue";
 import LetterTestPage from "./pages/LetterTestPage.vue";
@@ -20,10 +22,14 @@ import AboutPage from "./pages/AboutPage.vue";
 import PrivacyPage from "./pages/PrivacyPage.vue";
 import { trackPageHit } from "./lib/analytics";
 
+const PAGE_TRANSITION_MS = 220;
+
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: "/", component: HomePage },
+    { path: "/learn/words", component: WordsHubPage },
+    { path: "/learn/numbers", component: NumbersHubPage },
     { path: "/settings", component: SettingsPage },
     { path: "/about", component: AboutPage },
     { path: "/privacy", component: PrivacyPage },
@@ -44,6 +50,18 @@ export const router = createRouter({
     { path: "/integers/test", component: IntegerTestPage },
     { path: "/:pathMatch(.*)*", redirect: "/" },
   ],
+  // Ждём out-in transition в App.vue, иначе на мобилках остаётся scrollY с прошлой страницы
+  scrollBehavior(_to, _from, savedPosition) {
+    if (savedPosition) {
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(savedPosition), PAGE_TRANSITION_MS);
+      });
+    }
+
+    return new Promise((resolve) => {
+      setTimeout(() => resolve({ top: 0, left: 0 }), PAGE_TRANSITION_MS);
+    });
+  },
 });
 
 router.afterEach(() => {

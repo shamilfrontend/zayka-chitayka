@@ -4,19 +4,10 @@ import { RouterLink } from "vue-router";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import ProgressBar from "../components/ProgressBar.vue";
 import { useLevelContent } from "../composables/useLevelContent";
+import modeStyles from "../styles/mode-cards.module.css";
 import styles from "./HomePage.module.css";
 
 const {
-  letters,
-  syllables,
-  words,
-  numbers,
-  integers,
-  lettersDone,
-  syllablesDone,
-  wordsDone,
-  numbersDone,
-  integersDone,
   lettersPassed,
   syllablesPassed,
   wordsPassed,
@@ -24,41 +15,31 @@ const {
   integersPassed,
 } = useLevelContent();
 
-const modes = computed(() => [
+const wordsPassedCount = computed(
+  () =>
+    Number(lettersPassed.value) +
+    Number(syllablesPassed.value) +
+    Number(wordsPassed.value),
+);
+
+const numbersPassedCount = computed(
+  () => Number(numbersPassed.value) + Number(integersPassed.value),
+);
+
+const hubs = computed(() => [
   {
-    to: "/letters",
-    title: "Буквы",
-    subtitle: `Изучено ${lettersDone.value} из ${letters.value.length}`,
+    to: "/learn/words",
+    title: "Учить слова А-Я",
+    subtitle: `Сдано ${wordsPassedCount.value} из 3`,
     variant: "mint" as const,
-    passed: lettersPassed.value,
+    passed: wordsPassedCount.value === 3,
   },
   {
-    to: "/syllables",
-    title: "Слоги",
-    subtitle: `Изучено ${syllablesDone.value} из ${syllables.value.length}`,
-    variant: "peach" as const,
-    passed: syllablesPassed.value,
-  },
-  {
-    to: "/words",
-    title: "Слова",
-    subtitle: `Изучено ${wordsDone.value} из ${words.value.length}`,
-    variant: "sky" as const,
-    passed: wordsPassed.value,
-  },
-  {
-    to: "/numbers",
-    title: "Цифры",
-    subtitle: `Изучено ${numbersDone.value} из ${numbers.value.length}`,
+    to: "/learn/numbers",
+    title: "Учить числа 0-9",
+    subtitle: `Сдано ${numbersPassedCount.value} из 2`,
     variant: "lilac" as const,
-    passed: numbersPassed.value,
-  },
-  {
-    to: "/integers",
-    title: "Числа",
-    subtitle: `Изучено ${integersDone.value} из ${integers.value.length}`,
-    variant: "butter" as const,
-    passed: integersPassed.value,
+    passed: numbersPassedCount.value === 2,
   },
 ]);
 </script>
@@ -79,19 +60,19 @@ const modes = computed(() => [
       :integers-passed="integersPassed"
     />
 
-    <nav :class="styles.modes" aria-label="Режимы обучения">
+    <nav :class="styles.hubs" aria-label="Режимы обучения">
       <RouterLink
-        v-for="mode in modes"
-        :key="mode.to"
-        :to="mode.to"
+        v-for="hub in hubs"
+        :key="hub.to"
+        :to="hub.to"
         :class="[
-          styles.mode,
-          styles[mode.variant],
-          { [styles.modePassed]: mode.passed },
+          modeStyles.mode,
+          modeStyles[hub.variant],
+          { [modeStyles.modePassed]: hub.passed },
         ]"
       >
-        <span :class="styles.modeTitle">{{ mode.title }}</span>
-        <span :class="styles.modeSub">{{ mode.subtitle }}</span>
+        <span :class="modeStyles.modeTitle">{{ hub.title }}</span>
+        <span :class="modeStyles.modeSub">{{ hub.subtitle }}</span>
       </RouterLink>
     </nav>
 
