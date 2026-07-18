@@ -15,8 +15,7 @@ const router = useRouter();
 const { learnNumber, progress } = useProgress();
 const { numbers } = useLevelContent();
 
-const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
-  useLearnDeck({
+const { index, item, learned, showOffer, readyForTest, goNext, goPrev } = useLearnDeck({
     items: numbers,
     speakItem: (entry) => speakRussian(entry.name),
     markLearned: (entry) => learnNumber(entry.digit),

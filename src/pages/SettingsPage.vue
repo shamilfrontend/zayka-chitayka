@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { RouterLink } from "vue-router";
 import PageShell from "../components/PageShell.vue";
 import { useProgress } from "../composables/useProgress";
+import { getLocale, setLocale, type Locale } from "../lib/locale";
 import styles from "./SettingsPage.module.css";
 
 const { reset } = useProgress();
 const confirmReset = ref(false);
+const locale = ref<Locale>(getLocale());
+
+const selectLocale = (value: Locale) => {
+  setLocale(value);
+  locale.value = value;
+};
 
 const doReset = () => {
   reset();
@@ -15,6 +23,42 @@ const doReset = () => {
 
 <template>
   <PageShell title="Настройки">
+    <section
+      :class="[styles.section, styles.langSection]"
+      aria-labelledby="lang-heading"
+    >
+      <h2 id="lang-heading" :class="styles.sectionTitle">Язык</h2>
+      <div :class="styles.langCopy">
+        <p :class="styles.langDream">
+          Мечтаем, чтобы здесь звучали языки всех народов.
+        </p>
+        <p :class="styles.sectionHint">
+          Пока доступен только русский. Если знаете другой язык и хотите
+          поучаствовать —
+          <RouterLink to="/about" :class="styles.hintLink">напишите нам</RouterLink>.
+        </p>
+      </div>
+
+      <div
+        :class="styles.langList"
+        role="radiogroup"
+        aria-labelledby="lang-heading"
+      >
+        <button
+          type="button"
+          role="radio"
+          :aria-checked="locale === 'ru'"
+          :class="[
+            styles.langOption,
+            locale === 'ru' ? styles.langOptionActive : '',
+          ]"
+          @click="selectLocale('ru')"
+        >
+          Русский
+        </button>
+      </div>
+    </section>
+
     <section :class="styles.section" aria-labelledby="reset-heading">
       <h2 id="reset-heading" :class="styles.sectionTitle">Прогресс</h2>
       <p :class="styles.sectionHint">
