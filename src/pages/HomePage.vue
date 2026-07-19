@@ -129,6 +129,10 @@ const hubs = computed(() => [
         Настройки
       </RouterLink>
       <span :class="styles.footerDot" aria-hidden="true">·</span>
+      <RouterLink :to="'/description'" :class="styles.footerLink">
+        Описание
+      </RouterLink>
+      <span :class="styles.footerDot" aria-hidden="true">·</span>
       <RouterLink :to="'/about'" :class="styles.footerLink">
         Об авторах
       </RouterLink>

@@ -8,15 +8,6 @@ const saidaSrc = `${import.meta.env.BASE_URL}author-saida.png`;
 
 <template>
   <PageShell title="Об авторах">
-    <section :class="styles.parents" aria-labelledby="parents-heading">
-      <h2 id="parents-heading" :class="styles.parentsTitle">Для родителей</h2>
-      <p :class="styles.parentsText">
-        Занимайтесь по 10–15 минут в день: сначала карточки, потом короткая
-        игра, затем проверка раздела. Без таймеров, штрафов и рекламы — прогресс
-        хранится только на устройстве.
-      </p>
-    </section>
-
     <div :class="styles.list">
       <div :class="styles.card">
         <img

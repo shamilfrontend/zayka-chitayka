@@ -28,7 +28,7 @@ const word = computed(() => item.value!);
 </script>
 
 <template>
-  <PageShell title="Слова">
+  <PageShell title="Слова" back-to="/learn/words">
     <div v-if="showOffer" :class="styles.offer">
       <BunnyMascot size="md" mood="cheer" />
       <h2 :class="styles.offerTitle">Пора проверить!</h2>

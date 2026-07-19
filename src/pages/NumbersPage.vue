@@ -28,7 +28,7 @@ const number = computed(() => item.value!);
 </script>
 
 <template>
-  <PageShell title="Цифры">
+  <PageShell title="Цифры" back-to="/learn/numbers">
     <div v-if="showOffer" :class="styles.offer">
       <BunnyMascot size="md" mood="cheer" />
       <h2 :class="styles.offerTitle">Пора проверить!</h2>

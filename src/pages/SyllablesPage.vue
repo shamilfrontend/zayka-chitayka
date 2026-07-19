@@ -28,7 +28,7 @@ const syllable = computed(() => item.value!);
 </script>
 
 <template>
-  <PageShell title="Слоги">
+  <PageShell title="Слоги" back-to="/learn/words">
     <div v-if="showOffer" :class="styles.offer">
       <BunnyMascot size="md" mood="cheer" />
       <h2 :class="styles.offerTitle">Пора проверить!</h2>
