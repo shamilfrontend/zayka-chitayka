@@ -1,3 +1,32 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+import BigButton from "../components/BigButton.vue";
+import BunnyMascot from "../components/BunnyMascot.vue";
+import PageShell from "../components/PageShell.vue";
+import { useLearnDeck } from "../composables/useLearnDeck";
+import { useLevelContent } from "../composables/useLevelContent";
+import { useProgress } from "../composables/useProgress";
+import { speakRussian } from "../lib/speech";
+import styles from "./Learn.module.css";
+
+const router = useRouter();
+const { learnInteger, progress } = useProgress();
+const { integers } = useLevelContent();
+
+const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
+  useLearnDeck({
+    items: integers,
+    speakItem: (entry) => speakRussian(entry.name),
+    markLearned: (entry) => learnInteger(entry.text),
+    isItemLearned: (entry) =>
+      progress.value.integersLearned.includes(entry.text),
+    sectionId: "integers",
+  });
+
+const integer = computed(() => item.value!);
+</script>
+
 <template>
   <PageShell title="Числа">
     <div v-if="showOffer" :class="styles.offer">
@@ -74,32 +103,3 @@
     </template>
   </PageShell>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import { useRouter } from "vue-router";
-import BigButton from "../components/BigButton.vue";
-import BunnyMascot from "../components/BunnyMascot.vue";
-import PageShell from "../components/PageShell.vue";
-import { useLearnDeck } from "../composables/useLearnDeck";
-import { useLevelContent } from "../composables/useLevelContent";
-import { useProgress } from "../composables/useProgress";
-import { speakRussian } from "../lib/speech";
-import styles from "./Learn.module.css";
-
-const router = useRouter();
-const { learnInteger, progress } = useProgress();
-const { integers } = useLevelContent();
-
-const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
-  useLearnDeck({
-    items: integers,
-    speakItem: (entry) => speakRussian(entry.name),
-    markLearned: (entry) => learnInteger(entry.text),
-    isItemLearned: (entry) =>
-      progress.value.integersLearned.includes(entry.text),
-    sectionId: "integers",
-  });
-
-const integer = computed(() => item.value!);
-</script>

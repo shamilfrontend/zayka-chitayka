@@ -19,6 +19,8 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
     pool: () => letters.value,
     getKey: (letter) => letter.char,
     choiceCount: 4,
+    sessionSize: 12,
+    correctsPerLesson: 1,
     onAsk: (letter) => speakRussian(`Где буква ${letter.char}?`),
     onCorrect: (letter) => learnLetter(letter.char),
     successPhrase: "Молодец!",

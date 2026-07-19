@@ -92,8 +92,10 @@ const backToHub = () => {
 
     <div v-else-if="done" :class="styles.done">
       <BunnyMascot size="md" mood="cheer" />
-      <h2 :class="styles.doneTitle">Игра пройдена!</h2>
-      <p :class="styles.doneText">Ты сделал {{ goal }} верных ответов.</p>
+      <h2 :class="styles.doneTitle">Раздел сдан!</h2>
+      <p :class="styles.doneText">
+        Ты сделал {{ goal }} верных ответов. Раздел отмечен в прогрессе.
+      </p>
       <BigButton variant="mint" size="lg" full-width @click="playAgain">
         Ещё раз
       </BigButton>

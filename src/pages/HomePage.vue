@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import ProgressBar from "../components/ProgressBar.vue";
 import { useLevelContent } from "../composables/useLevelContent";
+import {
+  dismissOnboarding,
+  shouldShowOnboarding,
+} from "../lib/onboarding";
 import modeStyles from "../styles/mode-cards.module.css";
 import styles from "./HomePage.module.css";
 
@@ -13,7 +17,20 @@ const {
   wordsPassed,
   numbersPassed,
   integersPassed,
+  additionPassed,
+  subtractionPassed,
 } = useLevelContent();
+
+const showOnboarding = ref(false);
+
+onMounted(() => {
+  showOnboarding.value = shouldShowOnboarding();
+});
+
+const closeOnboarding = () => {
+  dismissOnboarding();
+  showOnboarding.value = false;
+};
 
 const wordsPassedCount = computed(
   () =>
@@ -23,7 +40,11 @@ const wordsPassedCount = computed(
 );
 
 const numbersPassedCount = computed(
-  () => Number(numbersPassed.value) + Number(integersPassed.value),
+  () =>
+    Number(numbersPassed.value) +
+    Number(integersPassed.value) +
+    Number(additionPassed.value) +
+    Number(subtractionPassed.value),
 );
 
 const hubs = computed(() => [
@@ -37,15 +58,40 @@ const hubs = computed(() => [
   {
     to: "/learn/numbers",
     title: "Учить числа",
-    subtitle: `Сдано ${numbersPassedCount.value} из 2`,
+    subtitle: `Сдано ${numbersPassedCount.value} из 4`,
     variant: "lilac" as const,
-    passed: numbersPassedCount.value === 2,
+    passed: numbersPassedCount.value === 4,
   },
 ]);
 </script>
 
 <template>
   <div :class="styles.home">
+    <div
+      v-if="showOnboarding"
+      :class="styles.onboarding"
+      role="dialog"
+      aria-labelledby="onboarding-title"
+      aria-modal="true"
+    >
+      <BunnyMascot size="md" mood="cheer" />
+      <h2 id="onboarding-title" :class="styles.onboardingTitle">
+        Привет!<br />
+        Я Зайка-Читайка
+      </h2>
+      <p :class="styles.onboardingText">
+        Выбери раздел ниже — будем читать и считать вместе. Нажми на карточку
+        или кнопку со звуком, чтобы услышать подсказку.
+      </p>
+      <button
+        type="button"
+        :class="styles.onboardingBtn"
+        @click="closeOnboarding"
+      >
+        Начать!
+      </button>
+    </div>
+
     <div :class="styles.hero">
       <BunnyMascot size="lg" mood="idle" />
       <h1 :class="styles.brand">Зайка-Читайка</h1>
@@ -58,6 +104,8 @@ const hubs = computed(() => [
       :words-passed="wordsPassed"
       :numbers-passed="numbersPassed"
       :integers-passed="integersPassed"
+      :addition-passed="additionPassed"
+      :subtraction-passed="subtractionPassed"
     />
 
     <nav :class="styles.hubs" aria-label="Режимы обучения">
@@ -83,6 +131,10 @@ const hubs = computed(() => [
       <span :class="styles.footerDot" aria-hidden="true">·</span>
       <RouterLink :to="'/about'" :class="styles.footerLink">
         Об авторах
+      </RouterLink>
+      <span :class="styles.footerDot" aria-hidden="true">·</span>
+      <RouterLink :to="'/changelog'" :class="styles.footerLink">
+        История изменений
       </RouterLink>
       <span :class="styles.footerDot" aria-hidden="true">·</span>
       <RouterLink :to="'/privacy'" :class="styles.footerLink">

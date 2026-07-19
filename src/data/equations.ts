@@ -1,3 +1,4 @@
+import { shuffle } from "../lib/shuffle";
 import { INTEGERS } from "./integers";
 
 export type EquationRange = 9 | 20 | 100;
@@ -30,19 +31,6 @@ function nameRussian(value: number): string {
 
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function shuffle<T>(items: T[]): T[] {
-  const copy = [...items];
-
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const tmp = copy[i];
-    copy[i] = copy[j];
-    copy[j] = tmp;
-  }
-
-  return copy;
 }
 
 /** Случайный пример сложения или вычитания в заданном диапазоне */

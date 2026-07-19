@@ -12,6 +12,8 @@ const {
   integersDone,
   numbersPassed,
   integersPassed,
+  additionPassed,
+  subtractionPassed,
 } = useLevelContent();
 
 const modes = computed(() => [
@@ -32,16 +34,20 @@ const modes = computed(() => [
   {
     to: "/addition",
     title: "Сложение",
-    subtitle: "Игра: примеры на плюс",
+    subtitle: additionPassed.value
+      ? "Раздел сдан"
+      : "Игра: примеры на плюс",
     variant: "mint" as const,
-    passed: false,
+    passed: additionPassed.value,
   },
   {
     to: "/subtraction",
     title: "Вычитание",
-    subtitle: "Игра: примеры на минус",
+    subtitle: subtractionPassed.value
+      ? "Раздел сдан"
+      : "Игра: примеры на минус",
     variant: "sky" as const,
-    passed: false,
+    passed: subtractionPassed.value,
   },
 ]);
 </script>

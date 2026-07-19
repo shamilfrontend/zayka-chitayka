@@ -1,11 +1,17 @@
+import { shuffle } from "./shuffle";
+
 const STORAGE_KEY = "reader-bunny-progress";
+
+export { shuffle };
 
 export type SectionId =
   | "letters"
   | "syllables"
   | "words"
   | "numbers"
-  | "integers";
+  | "integers"
+  | "addition"
+  | "subtraction";
 
 type SectionsPassed = Partial<Record<SectionId, boolean>>;
 
@@ -33,6 +39,8 @@ const SECTION_IDS: SectionId[] = [
   "words",
   "numbers",
   "integers",
+  "addition",
+  "subtraction",
 ];
 
 const DIGIT_KEYS = new Set([
@@ -220,18 +228,6 @@ export function resetProgress(): Progress {
   };
   saveProgress(next);
   return next;
-}
-
-/** Перемешать массив (Fisher–Yates) */
-export function shuffle<T>(items: T[]): T[] {
-  const copy = [...items];
-
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-
-  return copy;
 }
 
 /** Варианты ответов: правильный + distractors из пула */

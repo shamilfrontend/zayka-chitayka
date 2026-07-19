@@ -122,4 +122,27 @@ export const WORDS: Word[] = [
   // Редкие буквы / закрепление
   { text: "ЭХО", syllables: ["Э", "ХО"], emoji: "📢", hint: "эхо" },
   { text: "ЭКРАН", syllables: ["ЭК", "РАН"], emoji: "📺", hint: "экран" },
+
+  // Цвета
+  { text: "КРАСНЫЙ", syllables: ["КРАС", "НЫЙ"], emoji: "🔴", hint: "красный" },
+  { text: "СИНИЙ", syllables: ["СИ", "НИЙ"], emoji: "🔵", hint: "синий" },
+  { text: "ЖЁЛТЫЙ", syllables: ["ЖЁЛ", "ТЫЙ"], emoji: "🟡", hint: "жёлтый" },
+  { text: "ЗЕЛЁНЫЙ", syllables: ["ЗЕ", "ЛЁ", "НЫЙ"], emoji: "🟢", hint: "зелёный" },
+  { text: "БЕЛЫЙ", syllables: ["БЕ", "ЛЫЙ"], emoji: "⚪", hint: "белый" },
+  { text: "ЧЁРНЫЙ", syllables: ["ЧЁР", "НЫЙ"], emoji: "⚫", hint: "чёрный" },
+
+  // Действия и игры
+  { text: "БЕГ", syllables: ["БЕГ"], emoji: "🏃", hint: "бег" },
+  { text: "ПРЫГ", syllables: ["ПРЫГ"], emoji: "🤸", hint: "прыг" },
+  { text: "ПЕСНЯ", syllables: ["ПЕС", "НЯ"], emoji: "🎵", hint: "песня" },
+  { text: "ТАНЕЦ", syllables: ["ТА", "НЕЦ"], emoji: "💃", hint: "танец" },
+  { text: "РИСУНОК", syllables: ["РИ", "СУ", "НОК"], emoji: "🎨", hint: "рисунок" },
+  { text: "КУБИК", syllables: ["КУ", "БИК"], emoji: "🧱", hint: "кубик" },
+
+  // Погода и время
+  { text: "УТРО", syllables: ["УТ", "РО"], emoji: "🌅", hint: "утро" },
+  { text: "ВЕЧЕР", syllables: ["ВЕ", "ЧЕР"], emoji: "🌇", hint: "вечер" },
+  { text: "НОЧЬ", syllables: ["НОЧЬ"], emoji: "🌃", hint: "ночь" },
+  { text: "ВЕТЕР", syllables: ["ВЕ", "ТЕР"], emoji: "💨", hint: "ветер" },
+  { text: "ТУЧА", syllables: ["ТУ", "ЧА"], emoji: "☁️", hint: "туча" },
 ];

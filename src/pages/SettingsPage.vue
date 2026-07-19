@@ -30,11 +30,10 @@ const doReset = () => {
       <h2 id="lang-heading" :class="styles.sectionTitle">Язык</h2>
       <div :class="styles.langCopy">
         <p :class="styles.langDream">
-          Мечтаем, чтобы здесь звучали языки всех народов.
+          Сейчас приложение на русском.
         </p>
         <p :class="styles.sectionHint">
-          Пока доступен только русский. Если знаете другой язык и хотите
-          поучаствовать —
+          Другие языки появятся позже. Если хотите помочь с переводом —
           <RouterLink to="/about" :class="styles.hintLink">напишите нам</RouterLink>.
         </p>
       </div>
@@ -62,7 +61,8 @@ const doReset = () => {
     <section :class="styles.section" aria-labelledby="reset-heading">
       <h2 id="reset-heading" :class="styles.sectionTitle">Прогресс</h2>
       <p :class="styles.sectionHint">
-        Изученные буквы, слоги, слова, цифры, числа и сданные разделы обнулятся.
+        Изученные буквы, слоги, слова, цифры, числа, сложение, вычитание
+        и сданные разделы обнулятся.
       </p>
 
       <div :class="styles.resetZone">

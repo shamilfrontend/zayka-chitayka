@@ -20,6 +20,7 @@ import WordQuizPage from "./pages/WordQuizPage.vue";
 import WordTestPage from "./pages/WordTestPage.vue";
 import SettingsPage from "./pages/SettingsPage.vue";
 import AboutPage from "./pages/AboutPage.vue";
+import ChangelogPage from "./pages/ChangelogPage.vue";
 import PrivacyPage from "./pages/PrivacyPage.vue";
 import { trackPageHit } from "./lib/analytics";
 import type { EquationOp } from "./data/equations";
@@ -34,6 +35,7 @@ export const router = createRouter({
     { path: "/learn/numbers", component: NumbersHubPage },
     { path: "/settings", component: SettingsPage },
     { path: "/about", component: AboutPage },
+    { path: "/changelog", component: ChangelogPage },
     { path: "/privacy", component: PrivacyPage },
     { path: "/letters", component: LettersPage },
     { path: "/letters/quiz", component: LetterQuizPage },

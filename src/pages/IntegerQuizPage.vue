@@ -19,6 +19,8 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
     pool: () => integers.value,
     getKey: (entry) => entry.text,
     choiceCount: 4,
+    sessionSize: 12,
+    correctsPerLesson: 1,
     onAsk: (entry) => speakRussian(`Где число ${entry.name}?`),
     onCorrect: (entry) => learnInteger(entry.text),
     successPhrase: "Молодец!",

@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import BigButton from "../components/BigButton.vue";
+import BunnyMascot from "../components/BunnyMascot.vue";
+import PageShell from "../components/PageShell.vue";
+import SectionResult from "../components/SectionResult.vue";
+import {
+  INTEGERS_TEST_SIZE,
+  type IntegerItem,
+} from "../data/integers";
+import { useLevelContent } from "../composables/useLevelContent";
+import { useProgress } from "../composables/useProgress";
+import { useSectionTest } from "../composables/useSectionTest";
+import { speakRussian } from "../lib/speech";
+import { playSuccess } from "../lib/sounds";
+import styles from "./Quiz.module.css";
+
+const { integers } = useLevelContent();
+const { passSection } = useProgress();
+
+const {
+  target,
+  choices,
+  feedback,
+  errors,
+  phase,
+  passed,
+  counterLabel,
+  ask,
+  pick,
+  choiceVariant,
+} = useSectionTest<IntegerItem>({
+  pool: () => integers.value,
+  getKey: (entry) => entry.text,
+  choiceCount: 4,
+  questionLimit: INTEGERS_TEST_SIZE,
+  onAsk: (entry) => {
+    speakRussian(`Где число ${entry.name}?`);
+  },
+  onFinish: (didPass) => {
+    if (didPass) {
+      passSection("integers");
+      playSuccess();
+      speakRussian("Молодец!");
+    } else {
+      speakRussian("Давай повторим");
+    }
+  },
+});
+</script>
+
 <template>
   <PageShell title="Проверка чисел" back-to="/integers">
     <SectionResult
@@ -48,53 +98,3 @@
     </template>
   </PageShell>
 </template>
-
-<script setup lang="ts">
-import BigButton from "../components/BigButton.vue";
-import BunnyMascot from "../components/BunnyMascot.vue";
-import PageShell from "../components/PageShell.vue";
-import SectionResult from "../components/SectionResult.vue";
-import {
-  INTEGERS_TEST_SIZE,
-  type IntegerItem,
-} from "../data/integers";
-import { useLevelContent } from "../composables/useLevelContent";
-import { useProgress } from "../composables/useProgress";
-import { useSectionTest } from "../composables/useSectionTest";
-import { speakRussian } from "../lib/speech";
-import { playSuccess } from "../lib/sounds";
-import styles from "./Quiz.module.css";
-
-const { integers } = useLevelContent();
-const { passSection } = useProgress();
-
-const {
-  target,
-  choices,
-  feedback,
-  errors,
-  phase,
-  passed,
-  counterLabel,
-  ask,
-  pick,
-  choiceVariant,
-} = useSectionTest<IntegerItem>({
-  pool: () => integers.value,
-  getKey: (entry) => entry.text,
-  choiceCount: 4,
-  questionLimit: INTEGERS_TEST_SIZE,
-  onAsk: (entry) => {
-    speakRussian(`Где число ${entry.name}?`);
-  },
-  onFinish: (didPass) => {
-    if (didPass) {
-      passSection("integers");
-      playSuccess();
-      speakRussian("Молодец!");
-    } else {
-      speakRussian("Давай повторим");
-    }
-  },
-});
-</script>

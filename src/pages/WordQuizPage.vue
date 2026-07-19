@@ -20,6 +20,8 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
     pool: () => words.value,
     getKey: (word) => word.text,
     choiceCount: 3,
+    sessionSize: 10,
+    correctsPerLesson: 1,
     onAsk: () => speakRussian("Что изображено на картинке?"),
     onCorrect: (word) => learnWord(word.text),
     successPhrase: "Супер!",

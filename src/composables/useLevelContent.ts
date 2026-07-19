@@ -70,6 +70,14 @@ export function useLevelContent() {
     isSectionPassed(progress.value, "integers"),
   );
 
+  const additionPassed = computed(() =>
+    isSectionPassed(progress.value, "addition"),
+  );
+
+  const subtractionPassed = computed(() =>
+    isSectionPassed(progress.value, "subtraction"),
+  );
+
   return {
     letters,
     syllables,
@@ -86,5 +94,7 @@ export function useLevelContent() {
     wordsPassed,
     numbersPassed,
     integersPassed,
+    additionPassed,
+    subtractionPassed,
   };
 }

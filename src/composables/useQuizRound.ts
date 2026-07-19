@@ -1,13 +1,14 @@
 import { computed, onUnmounted, ref, watch, type Ref } from "vue";
 import { buildChoices } from "../lib/progress";
+import { shuffle } from "../lib/shuffle";
 import { speakRussian } from "../lib/speech";
 import { playSuccess, playTryAgain } from "../lib/sounds";
 
 type QuizFeedback = "idle" | "correct" | "retry";
 type ButtonVariant = "mint" | "peach" | "sky" | "cream" | "ghost";
 
-/** Сколько верных ответов нужно на каждый урок раздела */
-const CORRECTS_PER_LESSON = 3;
+/** Сколько верных ответов нужно на каждый урок раздела (по умолчанию) */
+const DEFAULT_CORRECTS_PER_LESSON = 3;
 
 interface QuizRound<T> {
   target: T;
@@ -26,34 +27,54 @@ interface UseQuizRoundOptions<T> {
   idleVariant?: ButtonVariant;
   correctVariant?: ButtonVariant;
   retryVariant?: ButtonVariant;
+  /**
+   * Сколько случайных уроков взять в сессию.
+   * Без лимита — весь пул (может быть долго на слогах/словах).
+   */
+  sessionSize?: number;
+  /** Верных ответов на каждый урок сессии */
+  correctsPerLesson?: number;
 }
 
 /**
- * Мини-игра раздела: 3 верных ответа на каждый урок,
+ * Мини-игра раздела: N верных на каждый урок сессии,
  * прогресс и экран завершения.
  */
 export function useQuizRound<T>(options: UseQuizRoundOptions<T>) {
   const idleVariant = options.idleVariant ?? "peach";
   const correctVariant = options.correctVariant ?? "mint";
   const retryVariant = options.retryVariant ?? "cream";
+  const correctsPerLesson =
+    options.correctsPerLesson ?? DEFAULT_CORRECTS_PER_LESSON;
 
+  const sessionPool = ref(buildSessionPool()) as Ref<T[]>;
   const winsByKey = ref<Record<string, number>>({});
   const done = ref(false);
   const feedback = ref<QuizFeedback>("idle");
   let advanceTimer: number | undefined;
   let retryTimer: number | undefined;
 
+  function buildSessionPool(): T[] {
+    const full = options.pool();
+    const limit = options.sessionSize;
+
+    if (limit === undefined || limit <= 0 || limit >= full.length) {
+      return [...full];
+    }
+
+    return shuffle(full).slice(0, limit);
+  }
+
   const winsOf = (key: string): number => winsByKey.value[key] ?? 0;
 
   const goal = computed(
-    () => Math.max(options.pool().length, 0) * CORRECTS_PER_LESSON,
+    () => Math.max(sessionPool.value.length, 0) * correctsPerLesson,
   );
 
   const progress = computed(() => {
-    const pool = options.pool();
-    return pool.reduce((sum, item) => {
+    return sessionPool.value.reduce((sum, item) => {
       const wins = winsOf(options.getKey(item));
-      return sum + Math.min(wins, CORRECTS_PER_LESSON);
+      return sum + Math.min(wins, correctsPerLesson);
     }, 0);
   });
 
@@ -64,18 +85,19 @@ export function useQuizRound<T>(options: UseQuizRoundOptions<T>) {
 
   function pickTarget(pool: T[]): T {
     const unfinished = pool.filter(
-      (item) => winsOf(options.getKey(item)) < CORRECTS_PER_LESSON,
+      (item) => winsOf(options.getKey(item)) < correctsPerLesson,
     );
     const candidates = unfinished.length > 0 ? unfinished : pool;
     return candidates[Math.floor(Math.random() * candidates.length)];
   }
 
   function nextRound(): QuizRound<T> {
-    const pool = options.pool();
+    const pool = sessionPool.value;
+    const fullPool = options.pool();
     const target = pickTarget(pool);
     const choices = buildChoices(
       target,
-      pool,
+      fullPool,
       options.choiceCount,
       options.getKey,
     );
@@ -148,7 +170,7 @@ export function useQuizRound<T>(options: UseQuizRoundOptions<T>) {
 
       const key = options.getKey(item);
       const current = winsOf(key);
-      if (current < CORRECTS_PER_LESSON) {
+      if (current < correctsPerLesson) {
         winsByKey.value = {
           ...winsByKey.value,
           [key]: current + 1,

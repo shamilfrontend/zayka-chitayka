@@ -21,11 +21,22 @@ function getSyllable(text: string): Syllable | undefined {
 
 function resolveSyllables(texts: readonly string[]): Syllable[] {
   return texts.map((text) => {
-    const found = getSyllable(text);
-    if (!found) {
-      throw new Error(`Missing syllable: ${text}`);
+    const upper = text.toUpperCase();
+    const found = getSyllable(upper);
+    if (found) {
+      return found;
     }
-    return found;
+
+    // Закрытые и особые слоги вне сетки согласный×гласный
+    if (upper.length >= 2) {
+      return {
+        text: upper,
+        consonant: upper[0] ?? "",
+        vowel: upper[1] ?? "",
+      };
+    }
+
+    throw new Error(`Missing syllable: ${text}`);
   });
 }
 
@@ -166,6 +177,23 @@ const INTRO_SYLLABLE_TEXTS = [
   "ЙО",
   "ЙА",
   "ЙУ",
+  // Закрытые слоги (согласный + гласный + согласный)
+  "МАМ",
+  "ПАП",
+  "КОТ",
+  "СОК",
+  "ДОМ",
+  "ЛЕС",
+  "НОС",
+  "РОТ",
+  "СУП",
+  "СЫР",
+  "МЯЧ",
+  "ШАР",
+  "ЛУК",
+  "РАК",
+  "КИТ",
+  "ГУС",
 ] as const;
 
 export const INTRO_SYLLABLES: Syllable[] = resolveSyllables(INTRO_SYLLABLE_TEXTS);

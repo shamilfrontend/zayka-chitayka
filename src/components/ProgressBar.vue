@@ -8,9 +8,11 @@ const props = defineProps<{
   wordsPassed: boolean;
   numbersPassed: boolean;
   integersPassed: boolean;
+  additionPassed: boolean;
+  subtractionPassed: boolean;
 }>();
 
-const SECTIONS_TOTAL = 5;
+const SECTIONS_TOTAL = 7;
 
 const percent = computed(() => {
   const done =
@@ -18,7 +20,9 @@ const percent = computed(() => {
     Number(props.syllablesPassed) +
     Number(props.wordsPassed) +
     Number(props.numbersPassed) +
-    Number(props.integersPassed);
+    Number(props.integersPassed) +
+    Number(props.additionPassed) +
+    Number(props.subtractionPassed);
   return Math.min(100, Math.round((done / SECTIONS_TOTAL) * 100));
 });
 </script>

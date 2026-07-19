@@ -19,6 +19,8 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
     pool: () => syllables.value,
     getKey: (syllable) => syllable.text,
     choiceCount: 4,
+    sessionSize: 10,
+    correctsPerLesson: 1,
     onAsk: (syllable) =>
       speakRussian(`Где слог ${syllable.text.toLowerCase()}?`),
     onCorrect: (syllable) => learnSyllable(syllable.text),

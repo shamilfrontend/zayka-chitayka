@@ -28,9 +28,18 @@ function pickRussianVoice(): SpeechSynthesisVoice | null {
   return ru ?? null;
 }
 
-export function speakRussian(text: string, rate = 0.85): void {
-  if (typeof window === "undefined" || !window.speechSynthesis) {
-    return;
+/** Есть ли поддержка озвучки в браузере */
+export function canSpeakRussian(): boolean {
+  return typeof window !== "undefined" && !!window.speechSynthesis;
+}
+
+/**
+ * Произнести текст по-русски.
+ * @returns false, если Speech API недоступен
+ */
+export function speakRussian(text: string, rate = 0.85): boolean {
+  if (!canSpeakRussian()) {
+    return false;
   }
 
   ensureVoices();
@@ -47,4 +56,5 @@ export function speakRussian(text: string, rate = 0.85): void {
   }
 
   window.speechSynthesis.speak(utterance);
+  return true;
 }

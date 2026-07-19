@@ -6,8 +6,10 @@ import {
   type EquationOp,
   type EquationRange,
 } from "../data/equations";
+import type { SectionId } from "../lib/progress";
 import { speakRussian } from "../lib/speech";
 import { playSuccess, playTryAgain } from "../lib/sounds";
+import { useProgress } from "./useProgress";
 
 type QuizFeedback = "idle" | "correct" | "retry";
 type ButtonVariant = "mint" | "peach" | "sky" | "cream" | "ghost";
@@ -26,10 +28,15 @@ interface UseEquationQuizOptions {
   active: () => boolean;
 }
 
+function sectionForOp(op: EquationOp): SectionId {
+  return op === "add" ? "addition" : "subtraction";
+}
+
 /**
- * Игра «пример → ответ»: 10 верных за сессию, без сохранения прогресса.
+ * Игра «пример → ответ»: 10 верных за сессию, раздел отмечается в прогрессе.
  */
 export function useEquationQuiz(options: UseEquationQuizOptions) {
+  const { passSection } = useProgress();
   const wins = ref(0);
   const done = ref(false);
   const feedback = ref<QuizFeedback>("idle");
@@ -124,6 +131,7 @@ export function useEquationQuiz(options: UseEquationQuizOptions) {
         if (wins.value >= goal) {
           done.value = true;
           feedback.value = "idle";
+          passSection(sectionForOp(options.op()));
           speakRussian("Игра пройдена!");
           return;
         }

@@ -1,0 +1,4 @@
+.article {
+  composes: article from "./PrivacyPage.module.css";
+  gap: var(--space-lg);
+}
