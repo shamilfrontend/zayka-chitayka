@@ -7,20 +7,20 @@ import PageShell from "../components/PageShell.vue";
 import { useLearnDeck } from "../composables/useLearnDeck";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
-import { speakRussian } from "../lib/speech";
+import { speakContent } from "../lib/speech";
 import styles from "./Learn.module.css";
 
 const router = useRouter();
-const { learnLetter, progress } = useProgress();
+const { learnLetter, reading } = useProgress();
 const { letters } = useLevelContent();
 
 const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
   useLearnDeck({
     items: letters,
-    speakItem: (letter) => speakRussian(letter.name),
+    speakItem: (letter) => speakContent(letter.name),
     markLearned: (letter) => learnLetter(letter.char),
     isItemLearned: (letter) =>
-      progress.value.lettersLearned.includes(letter.char),
+      reading.value.lettersLearned.includes(letter.char),
     sectionId: "letters",
   });
 
@@ -55,7 +55,7 @@ const letter = computed(() => item.value!);
           type="button"
           :class="styles.letterCard"
           :aria-label="`Буква ${letter.char}, произнести`"
-          @click="speakRussian(letter.name)"
+          @click="speakContent(letter.name)"
         >
           <span :class="styles.giant">{{ letter.char }}</span>
           <span :class="styles.hint">{{ letter.hint }}</span>
@@ -69,7 +69,7 @@ const letter = computed(() => item.value!);
         <BigButton variant="cream" aria-label="Предыдущая" @click="goPrev">
           ←
         </BigButton>
-        <BigButton variant="mint" size="lg" @click="speakRussian(letter.name)">
+        <BigButton variant="mint" size="lg" @click="speakContent(letter.name)">
           Слушать
         </BigButton>
         <BigButton variant="cream" aria-label="Следующая" @click="goNext">

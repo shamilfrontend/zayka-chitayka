@@ -1,5 +1,7 @@
 /** Озвучка на русском через Web Speech API */
 
+import { getLocale } from "./locale";
+
 let voicesReady = false;
 
 function ensureVoices(): void {
@@ -57,4 +59,34 @@ export function speakRussian(text: string, rate = 0.85): boolean {
 
   window.speechSynthesis.speak(utterance);
   return true;
+}
+
+/**
+ * Озвучка учебного контента (буквы, слоги, слова).
+ * Для аварского пока без TTS — браузерного голоса нет.
+ */
+export function speakContent(text: string, rate = 0.85): boolean {
+  if (getLocale() !== "ru") {
+    return false;
+  }
+
+  return speakRussian(text, rate);
+}
+
+/** Промпт квиза «найди букву» */
+export function speakLetterPrompt(char: string): boolean {
+  if (getLocale() !== "ru") {
+    return speakRussian("Где буква?");
+  }
+
+  return speakRussian(`Где буква ${char}?`);
+}
+
+/** Промпт квиза «найди слог» */
+export function speakSyllablePrompt(text: string): boolean {
+  if (getLocale() !== "ru") {
+    return speakRussian("Где слог?");
+  }
+
+  return speakRussian(`Где слог ${text.toLowerCase()}?`);
 }

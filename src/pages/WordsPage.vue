@@ -11,7 +11,7 @@ import { speakRussian } from "../lib/speech";
 import styles from "./Learn.module.css";
 
 const router = useRouter();
-const { learnWord, progress } = useProgress();
+const { learnWord, reading } = useProgress();
 const { words } = useLevelContent();
 
 const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
@@ -20,7 +20,7 @@ const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
     speakItem: (word) => speakRussian(word.hint),
     markLearned: (word) => learnWord(word.text),
     isItemLearned: (word) =>
-      progress.value.wordsLearned.includes(word.text),
+      reading.value.wordsLearned.includes(word.text),
     sectionId: "words",
   });
 

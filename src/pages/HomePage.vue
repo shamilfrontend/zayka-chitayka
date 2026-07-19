@@ -4,6 +4,7 @@ import { RouterLink } from "vue-router";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import ProgressBar from "../components/ProgressBar.vue";
 import { useLevelContent } from "../composables/useLevelContent";
+import { useLocale } from "../composables/useLocale";
 import {
   dismissOnboarding,
   shouldShowOnboarding,
@@ -20,6 +21,11 @@ const {
   additionPassed,
   subtractionPassed,
 } = useLevelContent();
+const { locale } = useLocale();
+
+const localeLabel = computed(() =>
+  locale.value === "av" ? "Аварский" : "Русский",
+);
 
 const showOnboarding = ref(false);
 
@@ -98,15 +104,24 @@ const hubs = computed(() => [
       <p :class="styles.tagline">Давай учиться читать и считать вместе!</p>
     </div>
 
-    <ProgressBar
-      :letters-passed="lettersPassed"
-      :syllables-passed="syllablesPassed"
-      :words-passed="wordsPassed"
-      :numbers-passed="numbersPassed"
-      :integers-passed="integersPassed"
-      :addition-passed="additionPassed"
-      :subtraction-passed="subtractionPassed"
-    />
+    <div :class="styles.progressBlock">
+      <ProgressBar
+        :letters-passed="lettersPassed"
+        :syllables-passed="syllablesPassed"
+        :words-passed="wordsPassed"
+        :numbers-passed="numbersPassed"
+        :integers-passed="integersPassed"
+        :addition-passed="additionPassed"
+        :subtraction-passed="subtractionPassed"
+      />
+      <RouterLink
+        to="/settings"
+        :class="styles.localeLine"
+        :aria-label="`Выбран язык: ${localeLabel}. Открыть настройки`"
+      >
+        Выбран язык: <strong>{{ localeLabel }}</strong>
+      </RouterLink>
+    </div>
 
     <nav :class="styles.hubs" aria-label="Режимы обучения">
       <RouterLink

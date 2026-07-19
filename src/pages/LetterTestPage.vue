@@ -7,7 +7,7 @@ import type { Letter } from "../data/letters";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { useSectionTest } from "../composables/useSectionTest";
-import { speakRussian } from "../lib/speech";
+import { speakLetterPrompt, speakRussian } from "../lib/speech";
 import { playSuccess } from "../lib/sounds";
 import styles from "./Quiz.module.css";
 
@@ -30,7 +30,7 @@ const {
   getKey: (letter) => letter.char,
   choiceCount: 4,
   onAsk: (letter) => {
-    speakRussian(`Где буква ${letter.char}?`);
+    speakLetterPrompt(letter.char);
   },
   onFinish: (didPass) => {
     if (didPass) {

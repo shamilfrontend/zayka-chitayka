@@ -7,7 +7,7 @@ import type { Letter } from "../data/letters";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { useQuizRound } from "../composables/useQuizRound";
-import { speakRussian } from "../lib/speech";
+import { speakLetterPrompt } from "../lib/speech";
 import styles from "./Quiz.module.css";
 
 const router = useRouter();
@@ -21,7 +21,7 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
     choiceCount: 4,
     sessionSize: 12,
     correctsPerLesson: 1,
-    onAsk: (letter) => speakRussian(`Где буква ${letter.char}?`),
+    onAsk: (letter) => speakLetterPrompt(letter.char),
     onCorrect: (letter) => learnLetter(letter.char),
     successPhrase: "Молодец!",
     idleVariant: "peach",

@@ -1,40 +1,49 @@
 import { computed } from "vue";
+import { INTRO_SYLLABLES as AV_SYLLABLES } from "../data/av/syllables";
+import { LETTERS as AV_LETTERS } from "../data/av/letters";
+import { WORDS as AV_WORDS } from "../data/av/words";
 import { INTEGERS } from "../data/integers";
-import { LETTERS } from "../data/letters";
+import { LETTERS as RU_LETTERS } from "../data/letters";
 import { NUMBERS } from "../data/numbers";
-import { INTRO_SYLLABLES } from "../data/syllables";
-import { WORDS } from "../data/words";
+import { INTRO_SYLLABLES as RU_SYLLABLES } from "../data/syllables";
+import { WORDS as RU_WORDS } from "../data/words";
 import { isSectionPassed } from "../lib/progress";
+import { useLocale } from "./useLocale";
 import { useProgress } from "./useProgress";
 
 /** Контент разделов обучения */
 export function useLevelContent() {
-  const { progress } = useProgress();
+  const { progress, reading } = useProgress();
+  const { locale } = useLocale();
 
-  const letters = computed(() => LETTERS);
-  const syllables = computed(() => INTRO_SYLLABLES);
-  const words = computed(() => WORDS);
+  const letters = computed(() =>
+    locale.value === "av" ? AV_LETTERS : RU_LETTERS,
+  );
+  const syllables = computed(() =>
+    locale.value === "av" ? AV_SYLLABLES : RU_SYLLABLES,
+  );
+  const words = computed(() => (locale.value === "av" ? AV_WORDS : RU_WORDS));
   const numbers = computed(() => NUMBERS);
   const integers = computed(() => INTEGERS);
 
   const lettersDone = computed(
     () =>
       letters.value.filter((l) =>
-        progress.value.lettersLearned.includes(l.char),
+        reading.value.lettersLearned.includes(l.char),
       ).length,
   );
 
   const syllablesDone = computed(
     () =>
       syllables.value.filter((s) =>
-        progress.value.syllablesLearned.includes(s.text),
+        reading.value.syllablesLearned.includes(s.text),
       ).length,
   );
 
   const wordsDone = computed(
     () =>
       words.value.filter((w) =>
-        progress.value.wordsLearned.includes(w.text),
+        reading.value.wordsLearned.includes(w.text),
       ).length,
   );
 
@@ -53,29 +62,31 @@ export function useLevelContent() {
   );
 
   const lettersPassed = computed(() =>
-    isSectionPassed(progress.value, "letters"),
+    isSectionPassed(progress.value, "letters", locale.value),
   );
 
   const syllablesPassed = computed(() =>
-    isSectionPassed(progress.value, "syllables"),
+    isSectionPassed(progress.value, "syllables", locale.value),
   );
 
-  const wordsPassed = computed(() => isSectionPassed(progress.value, "words"));
+  const wordsPassed = computed(() =>
+    isSectionPassed(progress.value, "words", locale.value),
+  );
 
   const numbersPassed = computed(() =>
-    isSectionPassed(progress.value, "numbers"),
+    isSectionPassed(progress.value, "numbers", locale.value),
   );
 
   const integersPassed = computed(() =>
-    isSectionPassed(progress.value, "integers"),
+    isSectionPassed(progress.value, "integers", locale.value),
   );
 
   const additionPassed = computed(() =>
-    isSectionPassed(progress.value, "addition"),
+    isSectionPassed(progress.value, "addition", locale.value),
   );
 
   const subtractionPassed = computed(() =>
-    isSectionPassed(progress.value, "subtraction"),
+    isSectionPassed(progress.value, "subtraction", locale.value),
   );
 
   return {

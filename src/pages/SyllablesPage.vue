@@ -7,20 +7,20 @@ import PageShell from "../components/PageShell.vue";
 import { useLearnDeck } from "../composables/useLearnDeck";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
-import { speakRussian } from "../lib/speech";
+import { speakContent } from "../lib/speech";
 import styles from "./Learn.module.css";
 
 const router = useRouter();
-const { learnSyllable, progress } = useProgress();
+const { learnSyllable, reading } = useProgress();
 const { syllables } = useLevelContent();
 
 const { index, item, learned, showOffer, readyForTest, goNext, goPrev } =
   useLearnDeck({
     items: syllables,
-    speakItem: (syllable) => speakRussian(syllable.text.toLowerCase()),
+    speakItem: (syllable) => speakContent(syllable.text.toLowerCase()),
     markLearned: (syllable) => learnSyllable(syllable.text),
     isItemLearned: (syllable) =>
-      progress.value.syllablesLearned.includes(syllable.text),
+      reading.value.syllablesLearned.includes(syllable.text),
     sectionId: "syllables",
   });
 
@@ -55,7 +55,7 @@ const syllable = computed(() => item.value!);
           type="button"
           :class="styles.syllableCard"
           :aria-label="`Слог ${syllable.text}, произнести`"
-          @click="speakRussian(syllable.text.toLowerCase())"
+          @click="speakContent(syllable.text.toLowerCase())"
         >
           <span :class="styles.giant">{{ syllable.text }}</span>
           <span :class="styles.hint">
@@ -76,7 +76,7 @@ const syllable = computed(() => item.value!);
         <BigButton
           variant="mint"
           size="lg"
-          @click="speakRussian(syllable.text.toLowerCase())"
+          @click="speakContent(syllable.text.toLowerCase())"
         >
           Слушать
         </BigButton>

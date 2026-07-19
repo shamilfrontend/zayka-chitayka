@@ -2,17 +2,17 @@
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import PageShell from "../components/PageShell.vue";
+import { useLocale } from "../composables/useLocale";
 import { useProgress } from "../composables/useProgress";
-import { getLocale, setLocale, type Locale } from "../lib/locale";
+import type { Locale } from "../lib/locale";
 import styles from "./SettingsPage.module.css";
 
 const { reset } = useProgress();
+const { locale, selectLocale } = useLocale();
 const confirmReset = ref(false);
-const locale = ref<Locale>(getLocale());
 
-const selectLocale = (value: Locale) => {
-  setLocale(value);
-  locale.value = value;
+const onSelectLocale = (value: Locale) => {
+  selectLocale(value);
 };
 
 const doReset = () => {
@@ -27,13 +27,14 @@ const doReset = () => {
       :class="[styles.section, styles.langSection]"
       aria-labelledby="lang-heading"
     >
-      <h2 id="lang-heading" :class="styles.sectionTitle">Язык</h2>
+      <h2 id="lang-heading" :class="styles.sectionTitle">Язык изучения</h2>
       <div :class="styles.langCopy">
         <p :class="styles.langDream">
-          Сейчас приложение на русском.
+          Выберите алфавит, слоги и слова для уроков чтения.
         </p>
         <p :class="styles.sectionHint">
-          Другие языки появятся позже. Если хотите помочь с переводом —
+          Интерфейс остаётся на русском. Математика общая для всех языков.
+          Если хотите помочь с контентом —
           <RouterLink to="/about" :class="styles.hintLink">напишите нам</RouterLink>.
         </p>
       </div>
@@ -51,9 +52,21 @@ const doReset = () => {
             styles.langOption,
             locale === 'ru' ? styles.langOptionActive : '',
           ]"
-          @click="selectLocale('ru')"
+          @click="onSelectLocale('ru')"
         >
           Русский
+        </button>
+        <button
+          type="button"
+          role="radio"
+          :aria-checked="locale === 'av'"
+          :class="[
+            styles.langOption,
+            locale === 'av' ? styles.langOptionActive : '',
+          ]"
+          @click="onSelectLocale('av')"
+        >
+          Аварский
         </button>
       </div>
     </section>
@@ -61,8 +74,8 @@ const doReset = () => {
     <section :class="styles.section" aria-labelledby="reset-heading">
       <h2 id="reset-heading" :class="styles.sectionTitle">Прогресс</h2>
       <p :class="styles.sectionHint">
-        Изученные буквы, слоги, слова, цифры, числа, сложение, вычитание
-        и сданные разделы обнулятся.
+        Изученные буквы, слоги, слова (для обоих языков), цифры, числа,
+        сложение, вычитание и сданные разделы обнулятся.
       </p>
 
       <div :class="styles.resetZone">
