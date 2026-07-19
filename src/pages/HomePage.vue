@@ -2,9 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
 import BunnyMascot from "../components/BunnyMascot.vue";
-import ProgressBar from "../components/ProgressBar.vue";
 import { useLevelContent } from "../composables/useLevelContent";
-import { useLocale } from "../composables/useLocale";
 import {
   dismissOnboarding,
   shouldShowOnboarding,
@@ -21,11 +19,6 @@ const {
   additionPassed,
   subtractionPassed,
 } = useLevelContent();
-const { locale } = useLocale();
-
-const localeLabel = computed(() =>
-  locale.value === "av" ? "Аварский" : "Русский",
-);
 
 const showOnboarding = ref(false);
 
@@ -53,22 +46,33 @@ const numbersPassedCount = computed(
     Number(subtractionPassed.value),
 );
 
-const hubs = computed(() => [
-  {
-    to: "/learn/words",
-    title: "Учить слова",
-    subtitle: `Сдано ${wordsPassedCount.value} из 3`,
-    variant: "mint" as const,
-    passed: wordsPassedCount.value === 3,
-  },
-  {
-    to: "/learn/numbers",
-    title: "Учить числа",
-    subtitle: `Сдано ${numbersPassedCount.value} из 4`,
-    variant: "lilac" as const,
-    passed: numbersPassedCount.value === 4,
-  },
-]);
+const hubs = computed(() => {
+  const wordsDone = wordsPassedCount.value;
+  const numbersDone = numbersPassedCount.value;
+
+  return [
+    {
+      to: "/learn/words",
+      title: "Учить слова",
+      subtitle: `Сдано ${wordsDone} из 3`,
+      variant: "mint" as const,
+      done: wordsDone,
+      total: 3,
+      percent: Math.min(100, Math.round((wordsDone / 3) * 100)),
+      passed: wordsDone === 3,
+    },
+    {
+      to: "/learn/numbers",
+      title: "Учить числа",
+      subtitle: `Сдано ${numbersDone} из 4`,
+      variant: "lilac" as const,
+      done: numbersDone,
+      total: 4,
+      percent: Math.min(100, Math.round((numbersDone / 4) * 100)),
+      passed: numbersDone === 4,
+    },
+  ];
+});
 </script>
 
 <template>
@@ -104,24 +108,13 @@ const hubs = computed(() => [
       <p :class="styles.tagline">Давай учиться читать и считать вместе!</p>
     </div>
 
-    <div :class="styles.progressBlock">
-      <ProgressBar
-        :letters-passed="lettersPassed"
-        :syllables-passed="syllablesPassed"
-        :words-passed="wordsPassed"
-        :numbers-passed="numbersPassed"
-        :integers-passed="integersPassed"
-        :addition-passed="additionPassed"
-        :subtraction-passed="subtractionPassed"
-      />
-      <RouterLink
-        to="/settings"
-        :class="styles.localeLine"
-        :aria-label="`Выбран язык: ${localeLabel}. Открыть настройки`"
-      >
-        Выбран язык: <strong>{{ localeLabel }}</strong>
-      </RouterLink>
-    </div>
+    <RouterLink
+      to="/settings"
+      :class="styles.localeLine"
+      aria-label="Выбран язык: Русский. Открыть настройки"
+    >
+      Выбран язык: <strong>Русский</strong>
+    </RouterLink>
 
     <nav :class="styles.hubs" aria-label="Режимы обучения">
       <RouterLink
@@ -131,11 +124,28 @@ const hubs = computed(() => [
         :class="[
           modeStyles.mode,
           modeStyles[hub.variant],
+          styles.hubCard,
           { [modeStyles.modePassed]: hub.passed },
         ]"
       >
         <span :class="modeStyles.modeTitle">{{ hub.title }}</span>
         <span :class="modeStyles.modeSub">{{ hub.subtitle }}</span>
+        <div :class="styles.hubProgress">
+          <div
+            :class="styles.hubTrack"
+            role="progressbar"
+            :aria-valuenow="hub.percent"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            :aria-label="`${hub.title}: ${hub.percent}%`"
+          >
+            <div
+              :class="styles.hubFill"
+              :style="{ width: `${hub.percent}%` }"
+            />
+          </div>
+          <span :class="styles.hubPercent">{{ hub.percent }}%</span>
+        </div>
       </RouterLink>
     </nav>
 

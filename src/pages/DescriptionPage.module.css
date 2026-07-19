@@ -21,10 +21,6 @@
   animation-delay: 0.08s;
 }
 
-.block:nth-child(3) {
-  animation-delay: 0.16s;
-}
-
 .title {
   margin: 0;
   font-family: var(--font-display);

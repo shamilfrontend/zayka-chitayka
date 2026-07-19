@@ -1,28 +1,19 @@
 import { computed } from "vue";
-import { INTRO_SYLLABLES as AV_SYLLABLES } from "../data/av/syllables";
-import { LETTERS as AV_LETTERS } from "../data/av/letters";
-import { WORDS as AV_WORDS } from "../data/av/words";
 import { INTEGERS } from "../data/integers";
-import { LETTERS as RU_LETTERS } from "../data/letters";
+import { LETTERS } from "../data/letters";
 import { NUMBERS } from "../data/numbers";
-import { INTRO_SYLLABLES as RU_SYLLABLES } from "../data/syllables";
-import { WORDS as RU_WORDS } from "../data/words";
+import { INTRO_SYLLABLES } from "../data/syllables";
+import { WORDS } from "../data/words";
 import { isSectionPassed } from "../lib/progress";
-import { useLocale } from "./useLocale";
 import { useProgress } from "./useProgress";
 
 /** Контент разделов обучения */
 export function useLevelContent() {
   const { progress, reading } = useProgress();
-  const { locale } = useLocale();
 
-  const letters = computed(() =>
-    locale.value === "av" ? AV_LETTERS : RU_LETTERS,
-  );
-  const syllables = computed(() =>
-    locale.value === "av" ? AV_SYLLABLES : RU_SYLLABLES,
-  );
-  const words = computed(() => (locale.value === "av" ? AV_WORDS : RU_WORDS));
+  const letters = computed(() => LETTERS);
+  const syllables = computed(() => INTRO_SYLLABLES);
+  const words = computed(() => WORDS);
   const numbers = computed(() => NUMBERS);
   const integers = computed(() => INTEGERS);
 
@@ -62,31 +53,29 @@ export function useLevelContent() {
   );
 
   const lettersPassed = computed(() =>
-    isSectionPassed(progress.value, "letters", locale.value),
+    isSectionPassed(progress.value, "letters"),
   );
 
   const syllablesPassed = computed(() =>
-    isSectionPassed(progress.value, "syllables", locale.value),
+    isSectionPassed(progress.value, "syllables"),
   );
 
-  const wordsPassed = computed(() =>
-    isSectionPassed(progress.value, "words", locale.value),
-  );
+  const wordsPassed = computed(() => isSectionPassed(progress.value, "words"));
 
   const numbersPassed = computed(() =>
-    isSectionPassed(progress.value, "numbers", locale.value),
+    isSectionPassed(progress.value, "numbers"),
   );
 
   const integersPassed = computed(() =>
-    isSectionPassed(progress.value, "integers", locale.value),
+    isSectionPassed(progress.value, "integers"),
   );
 
   const additionPassed = computed(() =>
-    isSectionPassed(progress.value, "addition", locale.value),
+    isSectionPassed(progress.value, "addition"),
   );
 
   const subtractionPassed = computed(() =>
-    isSectionPassed(progress.value, "subtraction", locale.value),
+    isSectionPassed(progress.value, "subtraction"),
   );
 
   return {
