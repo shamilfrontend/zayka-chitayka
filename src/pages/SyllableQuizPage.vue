@@ -7,7 +7,7 @@ import type { Syllable } from "../data/syllables";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { useQuizRound } from "../composables/useQuizRound";
-import { speakRussian } from "../lib/speech";
+import { speakSyllablePrompt } from "../lib/speech";
 import styles from "./Quiz.module.css";
 
 const router = useRouter();
@@ -21,8 +21,7 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
     choiceCount: 4,
     sessionSize: 10,
     correctsPerLesson: 1,
-    onAsk: (syllable) =>
-      speakRussian(`Где слог ${syllable.text.toLowerCase()}?`),
+    onAsk: (syllable) => speakSyllablePrompt(syllable.text),
     onCorrect: (syllable) => learnSyllable(syllable.text),
     successPhrase: "Ура!",
     idleVariant: "sky",

@@ -35,6 +35,64 @@
   font-weight: 700;
 }
 
+.localeLine {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.hubCard {
+  gap: 8px;
+  min-height: 132px;
+}
+
+.hubProgress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+  margin-top: 4px;
+}
+
+.hubTrack {
+  flex: 1;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(61, 58, 74, 0.1);
+}
+
+.hubFill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-mint), var(--color-peach));
+  transition: width 0.4s var(--ease-out);
+}
+
+.hubPercent {
+  flex-shrink: 0;
+  min-width: 2.5ch;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--color-ink);
+  opacity: 0.8;
+}
+
+.localeLine strong {
+  color: var(--color-ink);
+  font-weight: 800;
+}
+
+.localeLine:hover,
+.localeLine:focus-visible {
+  text-decoration: underline;
+}
+
 .hubs {
   display: grid;
   grid-template-columns: 1fr;

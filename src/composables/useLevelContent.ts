@@ -9,7 +9,7 @@ import { useProgress } from "./useProgress";
 
 /** Контент разделов обучения */
 export function useLevelContent() {
-  const { progress } = useProgress();
+  const { progress, reading } = useProgress();
 
   const letters = computed(() => LETTERS);
   const syllables = computed(() => INTRO_SYLLABLES);
@@ -20,21 +20,21 @@ export function useLevelContent() {
   const lettersDone = computed(
     () =>
       letters.value.filter((l) =>
-        progress.value.lettersLearned.includes(l.char),
+        reading.value.lettersLearned.includes(l.char),
       ).length,
   );
 
   const syllablesDone = computed(
     () =>
       syllables.value.filter((s) =>
-        progress.value.syllablesLearned.includes(s.text),
+        reading.value.syllablesLearned.includes(s.text),
       ).length,
   );
 
   const wordsDone = computed(
     () =>
       words.value.filter((w) =>
-        progress.value.wordsLearned.includes(w.text),
+        reading.value.wordsLearned.includes(w.text),
       ).length,
   );
 

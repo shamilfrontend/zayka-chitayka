@@ -7,7 +7,7 @@ import type { Syllable } from "../data/syllables";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { useSectionTest } from "../composables/useSectionTest";
-import { speakRussian } from "../lib/speech";
+import { speakRussian, speakSyllablePrompt } from "../lib/speech";
 import { playSuccess } from "../lib/sounds";
 import styles from "./Quiz.module.css";
 
@@ -30,7 +30,7 @@ const {
   getKey: (syllable) => syllable.text,
   choiceCount: 4,
   onAsk: (syllable) => {
-    speakRussian(`Где слог ${syllable.text.toLowerCase()}?`);
+    speakSyllablePrompt(syllable.text);
   },
   onFinish: (didPass) => {
     if (didPass) {

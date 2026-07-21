@@ -96,6 +96,31 @@
   box-shadow: var(--shadow-press);
 }
 
+.langOptionSoon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.langOptionSoon:hover,
+.langOptionSoon:focus-visible,
+.langOptionSoon:active {
+  color: var(--color-ink-soft);
+  transform: none;
+}
+
+.langSoon {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: var(--color-ink-soft);
+}
+
 .resetZone {
   width: 100%;
   margin-top: var(--space-xs);

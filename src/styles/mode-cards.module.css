@@ -10,8 +10,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  min-height: 110px;
+  gap: 6px;
+  min-height: 118px;
   padding: var(--space-md);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-soft);

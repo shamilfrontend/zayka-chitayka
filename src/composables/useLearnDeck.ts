@@ -36,6 +36,20 @@ export function useLearnDeck<T>(options: UseLearnDeckOptions<T>) {
   const readyForTest = computed(() => allViewed.value && !passed.value);
 
   watch(
+    () => options.items.value.length,
+    (length) => {
+      if (length === 0) {
+        index.value = 0;
+        return;
+      }
+
+      if (index.value >= length) {
+        index.value = 0;
+      }
+    },
+  );
+
+  watch(
     item,
     (value) => {
       if (value && !showOffer.value) {
