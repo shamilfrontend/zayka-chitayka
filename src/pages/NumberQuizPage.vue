@@ -10,8 +10,6 @@ import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { useQuizRound } from "../composables/useQuizRound";
 import { speakRussian } from "../lib/speech";
-import styles from "./Quiz.module.css";
-import quizStyles from "./NumberQuiz.module.css";
 
 type PromptMode = "name" | "count";
 
@@ -48,10 +46,10 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
 
 <template>
   <PageShell title="Найди цифру" back-to="/numbers">
-    <div v-if="done" :class="styles.done">
+    <div v-if="done" class="done">
       <BunnyMascot size="md" mood="cheer" />
-      <h2 :class="styles.doneTitle">Игра пройдена!</h2>
-      <p :class="styles.doneText">Ты сделал {{ goal }} верных ответов.</p>
+      <h2 class="doneTitle">Игра пройдена!</h2>
+      <p class="doneText">Ты сделал {{ goal }} верных ответов.</p>
       <BigButton
         variant="mint"
         size="lg"
@@ -63,7 +61,7 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
     </div>
 
     <template v-else>
-      <div :class="styles.prompt">
+      <div class="prompt">
         <BunnyMascot
           size="sm"
           :mood="
@@ -74,21 +72,21 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
                 : 'think'
           "
         />
-        <p v-if="promptMode === 'name'" :class="styles.question">
+        <p v-if="promptMode === 'name'" class="question">
           Где цифра <strong>{{ round.target.name }}</strong>?
         </p>
-        <div v-else :class="quizStyles.countPrompt">
-          <p :class="styles.question">Сколько это?</p>
+        <div v-else class="countPrompt">
+          <p class="question">Сколько это?</p>
           <CountDots :count="round.target.value" size="lg" />
         </div>
         <BigButton variant="ghost" @click="ask">🔊 Ещё раз</BigButton>
       </div>
 
-      <div :class="styles.grid">
+      <div class="grid">
         <div
           v-for="entry in round.choices"
           :key="entry.digit"
-          :class="styles.choiceWrap"
+          class="choiceWrap"
         >
           <BigButton
             size="xl"
@@ -102,8 +100,13 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
         </div>
       </div>
 
-      <p :class="styles.streak">{{ counterLabel }}</p>
-      <p v-if="feedback === 'retry'" :class="styles.retryMsg">Попробуй ещё!</p>
+      <p class="streak">{{ counterLabel }}</p>
+      <p v-if="feedback === 'retry'" class="retryMsg">Попробуй ещё!</p>
     </template>
   </PageShell>
 </template>
+
+<style scoped lang="scss">
+@use "../styles/quiz";
+@use "../styles/number-quiz";
+</style>

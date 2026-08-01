@@ -1,5 +1,6 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import {
+  getReadingProgress,
   isSectionPassed,
   loadProgress,
   markIntegerLearned,
@@ -12,21 +13,28 @@ import {
   type Progress,
   type SectionId,
 } from "../lib/progress";
+import { useLocale } from "./useLocale";
 
 /** Общий стейт прогресса на всё приложение */
 const progress = ref<Progress>(loadProgress());
 
 export function useProgress() {
+  const { locale } = useLocale();
+
+  const reading = computed(() =>
+    getReadingProgress(progress.value, locale.value),
+  );
+
   const learnLetter = (char: string) => {
-    progress.value = markLetterLearned(char);
+    progress.value = markLetterLearned(char, locale.value);
   };
 
   const learnSyllable = (text: string) => {
-    progress.value = markSyllableLearned(text);
+    progress.value = markSyllableLearned(text, locale.value);
   };
 
   const learnWord = (text: string) => {
-    progress.value = markWordLearned(text);
+    progress.value = markWordLearned(text, locale.value);
   };
 
   const learnNumber = (digit: string) => {
@@ -38,11 +46,11 @@ export function useProgress() {
   };
 
   const passSection = (section: SectionId) => {
-    progress.value = persistSectionPassed(section);
+    progress.value = persistSectionPassed(section, locale.value);
   };
 
   const sectionPassed = (section: SectionId) => {
-    return isSectionPassed(progress.value, section);
+    return isSectionPassed(progress.value, section, locale.value);
   };
 
   const reset = () => {
@@ -51,6 +59,7 @@ export function useProgress() {
 
   return {
     progress,
+    reading,
     learnLetter,
     learnSyllable,
     learnWord,

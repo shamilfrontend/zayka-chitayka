@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import styles from "./BigButton.module.css";
-
 defineOptions({ inheritAttrs: false });
 
 withDefaults(
@@ -28,12 +26,7 @@ defineEmits<{
 <template>
   <button
     :type="type"
-    :class="[
-      styles.btn,
-      styles[variant],
-      styles[size],
-      fullWidth ? styles.full : '',
-    ]"
+    :class="['btn', variant, size, { full: fullWidth }]"
     :disabled="disabled"
     v-bind="$attrs"
     @click="$emit('click', $event)"
@@ -41,3 +34,89 @@ defineEmits<{
     <slot />
   </button>
 </template>
+
+<style scoped lang="scss">
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: var(--touch-min);
+  min-width: var(--touch-min);
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 0.15s var(--ease-out),
+    box-shadow 0.15s var(--ease-out),
+    background 0.15s ease;
+  user-select: none;
+
+  &:active:not(:disabled) {
+    transform: scale(0.96) translateY(2px);
+    box-shadow: var(--shadow-press);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-mint-dark);
+    outline-offset: 3px;
+  }
+}
+
+.md {
+  min-height: var(--touch-min);
+}
+
+.lg {
+  min-height: var(--touch-lg);
+  font-size: 1.35rem;
+  padding: 16px 28px;
+}
+
+.xl {
+  min-height: 100px;
+  min-width: 100px;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 8vw, 3.6rem);
+  font-weight: 700;
+  padding: 16px;
+  border-radius: var(--radius-card);
+}
+
+.full {
+  width: 100%;
+}
+
+.mint {
+  background: var(--color-mint);
+}
+
+.peach {
+  background: var(--color-peach);
+}
+
+.sky {
+  background: var(--color-sky);
+}
+
+.cream {
+  background: var(--color-white);
+}
+
+.ghost {
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-ink-soft);
+}
+</style>

@@ -2,14 +2,11 @@
 import { computed, onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
 import BunnyMascot from "../components/BunnyMascot.vue";
-import ProgressBar from "../components/ProgressBar.vue";
 import { useLevelContent } from "../composables/useLevelContent";
 import {
   dismissOnboarding,
   shouldShowOnboarding,
 } from "../lib/onboarding";
-import modeStyles from "../styles/mode-cards.module.css";
-import styles from "./HomePage.module.css";
 
 const {
   lettersPassed,
@@ -47,103 +44,353 @@ const numbersPassedCount = computed(
     Number(subtractionPassed.value),
 );
 
-const hubs = computed(() => [
-  {
-    to: "/learn/words",
-    title: "Учить слова",
-    subtitle: `Сдано ${wordsPassedCount.value} из 3`,
-    variant: "mint" as const,
-    passed: wordsPassedCount.value === 3,
-  },
-  {
-    to: "/learn/numbers",
-    title: "Учить числа",
-    subtitle: `Сдано ${numbersPassedCount.value} из 4`,
-    variant: "lilac" as const,
-    passed: numbersPassedCount.value === 4,
-  },
-]);
+const hubs = computed(() => {
+  const wordsDone = wordsPassedCount.value;
+  const numbersDone = numbersPassedCount.value;
+
+  return [
+    {
+      to: "/learn/words",
+      title: "Учить слова",
+      subtitle: `Сдано ${wordsDone} из 3`,
+      variant: "mint" as const,
+      done: wordsDone,
+      total: 3,
+      percent: Math.min(100, Math.round((wordsDone / 3) * 100)),
+      passed: wordsDone === 3,
+    },
+    {
+      to: "/learn/numbers",
+      title: "Учить числа",
+      subtitle: `Сдано ${numbersDone} из 4`,
+      variant: "lilac" as const,
+      done: numbersDone,
+      total: 4,
+      percent: Math.min(100, Math.round((numbersDone / 4) * 100)),
+      passed: numbersDone === 4,
+    },
+  ];
+});
 </script>
 
 <template>
-  <div :class="styles.home">
+  <div class="home">
     <div
       v-if="showOnboarding"
-      :class="styles.onboarding"
+      class="onboarding"
       role="dialog"
       aria-labelledby="onboarding-title"
       aria-modal="true"
     >
       <BunnyMascot size="md" mood="cheer" />
-      <h2 id="onboarding-title" :class="styles.onboardingTitle">
+      <h2 id="onboarding-title" class="onboardingTitle">
         Привет!<br />
         Я Зайка-Читайка
       </h2>
-      <p :class="styles.onboardingText">
+      <p class="onboardingText">
         Выбери раздел ниже — будем читать и считать вместе. Нажми на карточку
         или кнопку со звуком, чтобы услышать подсказку.
       </p>
       <button
         type="button"
-        :class="styles.onboardingBtn"
+        class="onboardingBtn"
         @click="closeOnboarding"
       >
         Начать!
       </button>
     </div>
 
-    <div :class="styles.hero">
+    <div class="hero">
       <BunnyMascot size="lg" mood="idle" />
-      <h1 :class="styles.brand">Зайка-Читайка</h1>
-      <p :class="styles.tagline">Давай учиться читать и считать вместе!</p>
+      <h1 class="brand">Зайка-Читайка</h1>
+      <p class="tagline">Давай учиться читать и считать вместе!</p>
     </div>
 
-    <ProgressBar
-      :letters-passed="lettersPassed"
-      :syllables-passed="syllablesPassed"
-      :words-passed="wordsPassed"
-      :numbers-passed="numbersPassed"
-      :integers-passed="integersPassed"
-      :addition-passed="additionPassed"
-      :subtraction-passed="subtractionPassed"
-    />
+    <RouterLink
+      to="/settings"
+      class="localeLine"
+      aria-label="Выбран язык: Русский. Открыть настройки"
+    >
+      Выбран язык: <strong>Русский</strong>
+    </RouterLink>
 
-    <nav :class="styles.hubs" aria-label="Режимы обучения">
+    <nav class="hubs" aria-label="Режимы обучения">
       <RouterLink
         v-for="hub in hubs"
         :key="hub.to"
         :to="hub.to"
         :class="[
-          modeStyles.mode,
-          modeStyles[hub.variant],
-          { [modeStyles.modePassed]: hub.passed },
+          'mode',
+          hub.variant,
+          'hubCard',
+          { modePassed: hub.passed },
         ]"
       >
-        <span :class="modeStyles.modeTitle">{{ hub.title }}</span>
-        <span :class="modeStyles.modeSub">{{ hub.subtitle }}</span>
+        <span class="modeTitle">{{ hub.title }}</span>
+        <span class="modeSub">{{ hub.subtitle }}</span>
+        <div class="hubProgress">
+          <div
+            class="hubTrack"
+            role="progressbar"
+            :aria-valuenow="hub.percent"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            :aria-label="`${hub.title}: ${hub.percent}%`"
+          >
+            <div
+              class="hubFill"
+              :style="{ width: `${hub.percent}%` }"
+            />
+          </div>
+          <span class="hubPercent">{{ hub.percent }}%</span>
+        </div>
       </RouterLink>
     </nav>
 
-    <nav :class="styles.footerLinks" aria-label="Дополнительно">
-      <RouterLink :to="'/settings'" :class="styles.footerLink">
+    <nav class="footerLinks" aria-label="Дополнительно">
+      <RouterLink :to="'/settings'" class="footerLink">
         Настройки
       </RouterLink>
-      <span :class="styles.footerDot" aria-hidden="true">·</span>
-      <RouterLink :to="'/description'" :class="styles.footerLink">
+      <span class="footerDot" aria-hidden="true">·</span>
+      <RouterLink :to="'/description'" class="footerLink">
         Описание
       </RouterLink>
-      <span :class="styles.footerDot" aria-hidden="true">·</span>
-      <RouterLink :to="'/about'" :class="styles.footerLink">
+      <span class="footerDot" aria-hidden="true">·</span>
+      <RouterLink :to="'/about'" class="footerLink">
         Об авторах
       </RouterLink>
-      <span :class="styles.footerDot" aria-hidden="true">·</span>
-      <RouterLink :to="'/changelog'" :class="styles.footerLink">
+      <span class="footerDot" aria-hidden="true">·</span>
+      <RouterLink :to="'/changelog'" class="footerLink">
         История изменений
       </RouterLink>
-      <span :class="styles.footerDot" aria-hidden="true">·</span>
-      <RouterLink :to="'/privacy'" :class="styles.footerLink">
+      <span class="footerDot" aria-hidden="true">·</span>
+      <RouterLink :to="'/privacy'" class="footerLink">
         Конфиденциальность
       </RouterLink>
     </nav>
   </div>
 </template>
+
+<style scoped lang="scss">
+@use "../styles/mode-cards";
+.home {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-md);
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-sm);
+  animation: fadeUp 0.6s var(--ease-out);
+}
+
+.brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 10vw, 3.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  line-height: 1.05;
+}
+
+.tagline {
+  margin: 0;
+  font-size: clamp(1.05rem, 3.5vw, 1.25rem);
+  color: var(--color-ink-soft);
+  font-weight: 700;
+}
+
+.localeLine {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.hubCard {
+  gap: 8px;
+  min-height: 132px;
+}
+
+.hubProgress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+  margin-top: 4px;
+}
+
+.hubTrack {
+  flex: 1;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(61, 58, 74, 0.1);
+}
+
+.hubFill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-mint), var(--color-peach));
+  transition: width 0.4s var(--ease-out);
+}
+
+.hubPercent {
+  flex-shrink: 0;
+  min-width: 2.5ch;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--color-ink);
+  opacity: 0.8;
+}
+
+.localeLine strong {
+  color: var(--color-ink);
+  font-weight: 800;
+}
+
+.localeLine:hover,
+.localeLine:focus-visible {
+  text-decoration: underline;
+}
+
+.hubs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.footerLinks {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.footerLink {
+  color: var(--color-ink-soft);
+  font-size: 0.95rem;
+  font-weight: 700;
+  opacity: 0.65;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footerLink:hover,
+.footerLink:focus-visible {
+  opacity: 1;
+}
+
+.footerDot {
+  display: none;
+  color: var(--color-ink-soft);
+  opacity: 0.45;
+  font-weight: 700;
+}
+
+@media (min-width: 540px) {
+  .footerLinks {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .footerDot {
+    display: inline;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    animation: none;
+  }
+}
+
+.onboarding {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: rgba(255, 248, 240, 0.96);
+  text-align: center;
+  animation: fadeUp 0.4s var(--ease-out);
+}
+
+.onboardingTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 700;
+  color: var(--color-ink);
+  line-height: 1.2;
+  max-width: 18ch;
+}
+
+.onboardingText {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+  line-height: 1.45;
+  max-width: 28ch;
+}
+
+.onboardingBtn {
+  margin-top: var(--space-sm);
+  min-height: 56px;
+  min-width: 200px;
+  padding: 0.85rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-btn);
+  background: var(--color-mint);
+  color: var(--color-ink);
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+}
+
+.onboardingBtn:hover,
+.onboardingBtn:focus-visible {
+  filter: brightness(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding {
+    animation: none;
+  }
+}
+</style>

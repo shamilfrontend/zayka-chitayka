@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import PageShell from "../components/PageShell.vue";
-import privacy from "./PrivacyPage.module.css";
-import styles from "./ChangelogPage.module.css";
 
 interface ChangelogEntry {
   date: string;
@@ -10,6 +8,15 @@ interface ChangelogEntry {
 }
 
 const entries: ChangelogEntry[] = [
+  {
+    date: "Версия 1.3.0",
+    title: "Описание и прогресс",
+    items: [
+      "Страница «Описание» — для кого приложение и какая польза",
+      "Прогресс по разделам прямо на карточках главной",
+      "Корректный возврат назад с обучающих карточек",
+    ],
+  },
   {
     date: "Версия 1.2.0",
     title: "Онбординг и удобство",
@@ -45,8 +52,8 @@ const entries: ChangelogEntry[] = [
 
 <template>
   <PageShell title="История изменений">
-    <article :class="styles.article">
-      <p :class="privacy.lead">
+    <article class="article">
+      <p class="lead">
         Кратко о том, что появилось в «Зайке-Читайке». Обновления для родителей
         и педагогов — без технических деталей.
       </p>
@@ -55,16 +62,16 @@ const entries: ChangelogEntry[] = [
         v-for="(entry, index) in entries"
         :id="`changelog-${index}`"
         :key="entry.date + entry.title"
-        :class="privacy.block"
+        class="block"
         :aria-labelledby="`changelog-heading-${index}`"
       >
-        <h2 :id="`changelog-heading-${index}`" :class="privacy.heading">
+        <h2 :id="`changelog-heading-${index}`" class="heading">
           {{ entry.date }} — {{ entry.title }}
         </h2>
         <p
           v-for="item in entry.items"
           :key="item"
-          :class="privacy.text"
+          class="text"
         >
           — {{ item }}
         </p>
@@ -72,3 +79,10 @@ const entries: ChangelogEntry[] = [
     </article>
   </PageShell>
 </template>
+
+<style scoped lang="scss">
+@use "../styles/prose-page";
+.article {
+  gap: var(--space-lg);
+}
+</style>

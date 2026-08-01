@@ -1,8 +1,14 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-pwa/client" />
 
-interface Window {
-  ym?: (...args: unknown[]) => void;
+import "vue-router";
+
+export {};
+
+declare global {
+  interface Window {
+    ym?: (...args: unknown[]) => void;
+  }
 }
 
 declare module "*.vue" {
@@ -11,7 +17,8 @@ declare module "*.vue" {
   export default component;
 }
 
-declare module "*.module.css" {
-  const classes: Record<string, string>;
-  export default classes;
+declare module "vue-router" {
+  interface RouteMeta {
+    equationOp?: import("./data/equations").EquationOp;
+  }
 }

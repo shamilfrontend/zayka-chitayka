@@ -11,8 +11,6 @@ import { useProgress } from "../composables/useProgress";
 import { useSectionTest } from "../composables/useSectionTest";
 import { speakRussian } from "../lib/speech";
 import { playSuccess } from "../lib/sounds";
-import styles from "./Quiz.module.css";
-import quizStyles from "./NumberQuiz.module.css";
 
 type PromptMode = "name" | "count";
 
@@ -71,7 +69,7 @@ const {
     />
 
     <template v-else>
-      <div :class="styles.prompt">
+      <div class="prompt">
         <BunnyMascot
           size="sm"
           :mood="
@@ -82,21 +80,21 @@ const {
                 : 'think'
           "
         />
-        <p v-if="promptMode === 'name'" :class="styles.question">
+        <p v-if="promptMode === 'name'" class="question">
           Где цифра <strong>{{ target?.name }}</strong>?
         </p>
-        <div v-else :class="quizStyles.countPrompt">
-          <p :class="styles.question">Сколько это?</p>
+        <div v-else class="countPrompt">
+          <p class="question">Сколько это?</p>
           <CountDots :count="target?.value ?? 0" size="lg" />
         </div>
         <BigButton variant="ghost" @click="ask">🔊 Ещё раз</BigButton>
       </div>
 
-      <div :class="styles.grid">
+      <div class="grid">
         <div
           v-for="entry in choices"
           :key="entry.digit"
-          :class="styles.choiceWrap"
+          class="choiceWrap"
         >
           <BigButton
             size="xl"
@@ -110,8 +108,13 @@ const {
         </div>
       </div>
 
-      <p :class="styles.streak">{{ counterLabel }}</p>
-      <p v-if="feedback === 'wrong'" :class="styles.retryMsg">Неверно</p>
+      <p class="streak">{{ counterLabel }}</p>
+      <p v-if="feedback === 'wrong'" class="retryMsg">Неверно</p>
     </template>
   </PageShell>
 </template>
+
+<style scoped lang="scss">
+@use "../styles/quiz";
+@use "../styles/number-quiz";
+</style>

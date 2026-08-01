@@ -1,6 +1,6 @@
 # Зайка-Читайка
 
-Игровое веб-приложение для детей 5–6 лет: учимся **читать и считать по-русски** — буквы, слоги, простые слова, цифры и числа.
+Игровое веб-приложение для детей 5–7 лет: учимся **читать и считать по-русски** — буквы, слоги, простые слова, цифры и числа.
 
 Сайт: [https://zayka-chitayka.ru](https://zayka-chitayka.ru)
 
@@ -50,7 +50,7 @@ Workflow: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
 ## Стек
 
-Vue 3, TypeScript, Vite, Vue Router, CSS Modules, vite-plugin-pwa.
+Vue 3, TypeScript, Vite, Vue Router, scoped SCSS, vite-plugin-pwa.
 
 ## Для ребёнка
 

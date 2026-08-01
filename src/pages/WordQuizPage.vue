@@ -8,8 +8,6 @@ import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { useQuizRound } from "../composables/useQuizRound";
 import { speakRussian } from "../lib/speech";
-import styles from "./Quiz.module.css";
-import learnStyles from "./Learn.module.css";
 
 const router = useRouter();
 const { words } = useLevelContent();
@@ -32,10 +30,10 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
 
 <template>
   <PageShell title="Какое слово?" back-to="/words">
-    <div v-if="done" :class="styles.done">
+    <div v-if="done" class="done">
       <BunnyMascot size="md" mood="cheer" />
-      <h2 :class="styles.doneTitle">Игра пройдена!</h2>
-      <p :class="styles.doneText">Ты сделал {{ goal }} верных ответов.</p>
+      <h2 class="doneTitle">Игра пройдена!</h2>
+      <p class="doneText">Ты сделал {{ goal }} верных ответов.</p>
       <BigButton
         variant="mint"
         size="lg"
@@ -47,7 +45,7 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
     </div>
 
     <template v-else>
-      <div :class="styles.prompt">
+      <div class="prompt">
         <BunnyMascot
           size="sm"
           :mood="
@@ -58,10 +56,10 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
                 : 'think'
           "
         />
-        <p :class="styles.question">Что изображено на картинке?</p>
-        <div :class="learnStyles.promptCard">
-          <div :class="[learnStyles.wordCard, learnStyles.promptWord]">
-            <span :class="learnStyles.emoji" aria-hidden="true">
+        <p class="question">Что изображено на картинке?</p>
+        <div class="promptCard">
+          <div :class="['wordCard', 'promptWord']">
+            <span class="emoji" aria-hidden="true">
               {{ round.target.emoji }}
             </span>
           </div>
@@ -69,11 +67,11 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
         <BigButton variant="ghost" @click="ask">🔊 Подсказка</BigButton>
       </div>
 
-      <div :class="[styles.grid, styles.choices3]">
+      <div :class="['grid', 'choices3']">
         <div
           v-for="word in round.choices"
           :key="word.text"
-          :class="styles.choiceWrap"
+          class="choiceWrap"
         >
           <BigButton
             size="lg"
@@ -88,8 +86,13 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
         </div>
       </div>
 
-      <p :class="styles.streak">{{ counterLabel }}</p>
-      <p v-if="feedback === 'retry'" :class="styles.retryMsg">Попробуй ещё!</p>
+      <p class="streak">{{ counterLabel }}</p>
+      <p v-if="feedback === 'retry'" class="retryMsg">Попробуй ещё!</p>
     </template>
   </PageShell>
 </template>
+
+<style scoped lang="scss">
+@use "../styles/quiz";
+@use "../styles/learn";
+</style>

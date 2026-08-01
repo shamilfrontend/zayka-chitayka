@@ -9,8 +9,6 @@ import { useProgress } from "../composables/useProgress";
 import { useSectionTest } from "../composables/useSectionTest";
 import { speakRussian } from "../lib/speech";
 import { playSuccess } from "../lib/sounds";
-import styles from "./Quiz.module.css";
-import learnStyles from "./Learn.module.css";
 
 const { words } = useLevelContent();
 const { passSection } = useProgress();
@@ -55,7 +53,7 @@ const {
     />
 
     <template v-else>
-      <div :class="styles.prompt">
+      <div class="prompt">
         <BunnyMascot
           size="sm"
           :mood="
@@ -66,10 +64,10 @@ const {
                 : 'think'
           "
         />
-        <p :class="styles.question">Что изображено на картинке?</p>
-        <div :class="learnStyles.promptCard">
-          <div :class="[learnStyles.wordCard, learnStyles.promptWord]">
-            <span :class="learnStyles.emoji" aria-hidden="true">
+        <p class="question">Что изображено на картинке?</p>
+        <div class="promptCard">
+          <div :class="['wordCard', 'promptWord']">
+            <span class="emoji" aria-hidden="true">
               {{ target?.emoji }}
             </span>
           </div>
@@ -77,11 +75,11 @@ const {
         <BigButton variant="ghost" @click="ask">🔊 Подсказка</BigButton>
       </div>
 
-      <div :class="[styles.grid, styles.choices3]">
+      <div :class="['grid', 'choices3']">
         <div
           v-for="word in choices"
           :key="word.text"
-          :class="styles.choiceWrap"
+          class="choiceWrap"
         >
           <BigButton
             size="lg"
@@ -96,8 +94,13 @@ const {
         </div>
       </div>
 
-      <p :class="styles.streak">{{ counterLabel }}</p>
-      <p v-if="feedback === 'wrong'" :class="styles.retryMsg">Неверно</p>
+      <p class="streak">{{ counterLabel }}</p>
+      <p v-if="feedback === 'wrong'" class="retryMsg">Неверно</p>
     </template>
   </PageShell>
 </template>
+
+<style scoped lang="scss">
+@use "../styles/quiz";
+@use "../styles/learn";
+</style>

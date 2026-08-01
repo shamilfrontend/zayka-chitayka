@@ -7,9 +7,8 @@ import type { Syllable } from "../data/syllables";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { useSectionTest } from "../composables/useSectionTest";
-import { speakRussian } from "../lib/speech";
+import { speakRussian, speakSyllablePrompt } from "../lib/speech";
 import { playSuccess } from "../lib/sounds";
-import styles from "./Quiz.module.css";
 
 const { syllables } = useLevelContent();
 const { passSection } = useProgress();
@@ -30,7 +29,7 @@ const {
   getKey: (syllable) => syllable.text,
   choiceCount: 4,
   onAsk: (syllable) => {
-    speakRussian(`Где слог ${syllable.text.toLowerCase()}?`);
+    speakSyllablePrompt(syllable.text);
   },
   onFinish: (didPass) => {
     if (didPass) {
@@ -54,7 +53,7 @@ const {
     />
 
     <template v-else>
-      <div :class="styles.prompt">
+      <div class="prompt">
         <BunnyMascot
           size="sm"
           :mood="
@@ -65,17 +64,17 @@ const {
                 : 'think'
           "
         />
-        <p :class="styles.question">
+        <p class="question">
           Где слог <strong>{{ target?.text }}</strong>?
         </p>
         <BigButton variant="ghost" @click="ask">🔊 Ещё раз</BigButton>
       </div>
 
-      <div :class="styles.grid">
+      <div class="grid">
         <div
           v-for="syllable in choices"
           :key="syllable.text"
-          :class="styles.choiceWrap"
+          class="choiceWrap"
         >
           <BigButton
             size="xl"
@@ -89,8 +88,12 @@ const {
         </div>
       </div>
 
-      <p :class="styles.streak">{{ counterLabel }}</p>
-      <p v-if="feedback === 'wrong'" :class="styles.retryMsg">Неверно</p>
+      <p class="streak">{{ counterLabel }}</p>
+      <p v-if="feedback === 'wrong'" class="retryMsg">Неверно</p>
     </template>
   </PageShell>
 </template>
+
+<style scoped lang="scss">
+@use "../styles/quiz";
+</style>
