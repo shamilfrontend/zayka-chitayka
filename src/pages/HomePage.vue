@@ -16,7 +16,6 @@ const {
   integersPassed,
   additionPassed,
   subtractionPassed,
-  capitalsPassed,
 } = useLevelContent();
 
 const showOnboarding = ref(false);
@@ -45,12 +44,9 @@ const numbersPassedCount = computed(
     Number(subtractionPassed.value),
 );
 
-const miscPassedCount = computed(() => Number(capitalsPassed.value));
-
 const hubs = computed(() => {
   const wordsDone = wordsPassedCount.value;
   const numbersDone = numbersPassedCount.value;
-  const miscDone = miscPassedCount.value;
 
   return [
     {
@@ -72,16 +68,6 @@ const hubs = computed(() => {
       total: 4,
       percent: Math.min(100, Math.round((numbersDone / 4) * 100)),
       passed: numbersDone === 4,
-    },
-    {
-      to: "/learn/misc",
-      title: "Разное",
-      subtitle: `Сдано ${miscDone} из 1`,
-      variant: "peach" as const,
-      done: miscDone,
-      total: 1,
-      percent: Math.min(100, Math.round((miscDone / 1) * 100)),
-      passed: miscDone === 1,
     },
   ];
 });

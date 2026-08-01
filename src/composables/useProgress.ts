@@ -3,7 +3,6 @@ import {
   getReadingProgress,
   isSectionPassed,
   loadProgress,
-  markCapitalLearned,
   markIntegerLearned,
   markLetterLearned,
   markNumberLearned,
@@ -46,10 +45,6 @@ export function useProgress() {
     progress.value = markIntegerLearned(text);
   };
 
-  const learnCapital = (country: string) => {
-    progress.value = markCapitalLearned(country);
-  };
-
   const passSection = (section: SectionId) => {
     progress.value = persistSectionPassed(section, locale.value);
   };
@@ -70,7 +65,6 @@ export function useProgress() {
     learnWord,
     learnNumber,
     learnInteger,
-    learnCapital,
     passSection,
     sectionPassed,
     reset,

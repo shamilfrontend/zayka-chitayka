@@ -1,5 +1,4 @@
 import { computed } from "vue";
-import { CAPITALS } from "../data/capitals";
 import { INTEGERS } from "../data/integers";
 import { LETTERS } from "../data/letters";
 import { NUMBERS } from "../data/numbers";
@@ -17,7 +16,6 @@ export function useLevelContent() {
   const words = computed(() => WORDS);
   const numbers = computed(() => NUMBERS);
   const integers = computed(() => INTEGERS);
-  const capitals = computed(() => CAPITALS);
 
   const lettersDone = computed(
     () =>
@@ -54,13 +52,6 @@ export function useLevelContent() {
       ).length,
   );
 
-  const capitalsDone = computed(
-    () =>
-      capitals.value.filter((item) =>
-        progress.value.capitalsLearned.includes(item.country),
-      ).length,
-  );
-
   const lettersPassed = computed(() =>
     isSectionPassed(progress.value, "letters"),
   );
@@ -87,23 +78,17 @@ export function useLevelContent() {
     isSectionPassed(progress.value, "subtraction"),
   );
 
-  const capitalsPassed = computed(() =>
-    isSectionPassed(progress.value, "capitals"),
-  );
-
   return {
     letters,
     syllables,
     words,
     numbers,
     integers,
-    capitals,
     lettersDone,
     syllablesDone,
     wordsDone,
     numbersDone,
     integersDone,
-    capitalsDone,
     lettersPassed,
     syllablesPassed,
     wordsPassed,
@@ -111,6 +96,5 @@ export function useLevelContent() {
     integersPassed,
     additionPassed,
     subtractionPassed,
-    capitalsPassed,
   };
 }

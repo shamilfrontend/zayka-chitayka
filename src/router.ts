@@ -28,10 +28,6 @@ export const router = createRouter({
       component: () => import("./pages/NumbersHubPage.vue"),
     },
     {
-      path: "/learn/misc",
-      component: () => import("./pages/MiscHubPage.vue"),
-    },
-    {
       path: "/settings",
       component: () => import("./pages/SettingsPage.vue"),
     },
@@ -108,10 +104,6 @@ export const router = createRouter({
       path: "/subtraction",
       component: () => import("./pages/EquationPlayPage.vue"),
       meta: { equationOp: "sub" satisfies EquationOp },
-    },
-    {
-      path: "/capitals",
-      component: () => import("./pages/CapitalQuizPage.vue"),
     },
     { path: "/:pathMatch(.*)*", redirect: "/" },
   ],
