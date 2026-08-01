@@ -8,7 +8,6 @@ import { useLearnDeck } from "../composables/useLearnDeck";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { speakContent } from "../lib/speech";
-import styles from "./Learn.module.css";
 
 const router = useRouter();
 const { learnLetter, reading } = useProgress();
@@ -29,10 +28,10 @@ const letter = computed(() => item.value!);
 
 <template>
   <PageShell title="Буквы" back-to="/learn/words">
-    <div v-if="showOffer" :class="styles.offer">
+    <div v-if="showOffer" class="offer">
       <BunnyMascot size="md" mood="cheer" />
-      <h2 :class="styles.offerTitle">Пора проверить!</h2>
-      <p :class="styles.offerText">
+      <h2 class="offerTitle">Пора проверить!</h2>
+      <p class="offerText">
         Ты посмотрел все буквы. Пройди тест, чтобы сдать раздел.
       </p>
       <BigButton
@@ -49,23 +48,23 @@ const letter = computed(() => item.value!);
     </div>
 
     <template v-else>
-      <div :class="styles.cardWrap">
+      <div class="cardWrap">
         <button
           :key="letter.char"
           type="button"
-          :class="styles.letterCard"
+          class="letterCard"
           :aria-label="`Буква ${letter.char}, произнести`"
           @click="speakContent(letter.name)"
         >
-          <span :class="styles.giant">{{ letter.char }}</span>
-          <span :class="styles.hint">{{ letter.hint }}</span>
-          <span v-if="learned" :class="styles.badge">✓</span>
+          <span class="giant">{{ letter.char }}</span>
+          <span class="hint">{{ letter.hint }}</span>
+          <span v-if="learned" class="badge">✓</span>
         </button>
       </div>
 
-      <p :class="styles.counter">{{ index + 1 }} / {{ letters.length }}</p>
+      <p class="counter">{{ index + 1 }} / {{ letters.length }}</p>
 
-      <div :class="styles.row">
+      <div class="row">
         <BigButton variant="cream" aria-label="Предыдущая" @click="goPrev">
           ←
         </BigButton>
@@ -77,7 +76,7 @@ const letter = computed(() => item.value!);
         </BigButton>
       </div>
 
-      <div :class="styles.quizLink">
+      <div class="quizLink">
         <BigButton
           v-if="readyForTest"
           variant="peach"
@@ -99,3 +98,7 @@ const letter = computed(() => item.value!);
     </template>
   </PageShell>
 </template>
+
+<style scoped lang="scss">
+@use "../styles/learn";
+</style>

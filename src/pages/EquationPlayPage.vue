@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+
 import BigButton from "../components/BigButton.vue";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import PageShell from "../components/PageShell.vue";
@@ -11,14 +12,11 @@ import {
   type EquationOp,
   type EquationRange,
 } from "../data/equations";
-import modeStyles from "../styles/mode-cards.module.css";
-import styles from "./Quiz.module.css";
 
 const route = useRoute();
 const router = useRouter();
 
-const op = (): EquationOp =>
-  route.meta.equationOp === "sub" ? "sub" : "add";
+const op = (): EquationOp => route.meta.equationOp ?? "add";
 
 const pageTitle = computed(() =>
   op() === "add" ? "Сложение" : "Вычитание",
@@ -75,25 +73,25 @@ const backToHub = () => {
   <PageShell :title="pageTitle" back-to="/learn/numbers">
     <nav
       v-if="selectedRange === null"
-      :class="modeStyles.modes"
+      class="modes"
       :aria-label="`Диапазон: ${pageTitle}`"
     >
       <button
         v-for="option in rangeOptions"
         :key="option.max"
         type="button"
-        :class="[modeStyles.mode, modeStyles[option.variant], 'modeReset']"
+        :class="['mode', option.variant, 'modeReset']"
         @click="startRange(option.max)"
       >
-        <span :class="modeStyles.modeTitle">{{ option.label }}</span>
-        <span :class="modeStyles.modeSub">Выбери и играй</span>
+        <span class="modeTitle">{{ option.label }}</span>
+        <span class="modeSub">Выбери и играй</span>
       </button>
     </nav>
 
-    <div v-else-if="done" :class="styles.done">
+    <div v-else-if="done" class="done">
       <BunnyMascot size="md" mood="cheer" />
-      <h2 :class="styles.doneTitle">Раздел сдан!</h2>
-      <p :class="styles.doneText">
+      <h2 class="doneTitle">Раздел сдан!</h2>
+      <p class="doneText">
         Ты сделал {{ goal }} верных ответов. Раздел отмечен в прогрессе.
       </p>
       <BigButton variant="mint" size="lg" full-width @click="playAgain">
@@ -105,7 +103,7 @@ const backToHub = () => {
     </div>
 
     <template v-else>
-      <div :class="styles.prompt">
+      <div class="prompt">
         <BunnyMascot
           size="sm"
           :mood="
@@ -116,17 +114,17 @@ const backToHub = () => {
                 : 'think'
           "
         />
-        <p :class="styles.question">
+        <p class="question">
           <strong>{{ round.equation.prompt }}</strong>
         </p>
         <BigButton variant="ghost" @click="ask">🔊 Ещё раз</BigButton>
       </div>
 
-      <div :class="styles.grid">
+      <div class="grid">
         <div
           v-for="answer in round.choices"
           :key="`${round.equation.id}-${answer}`"
-          :class="styles.choiceWrap"
+          class="choiceWrap"
         >
           <BigButton
             size="xl"
@@ -140,13 +138,16 @@ const backToHub = () => {
         </div>
       </div>
 
-      <p :class="styles.streak">{{ counterLabel }}</p>
-      <p v-if="feedback === 'retry'" :class="styles.retryMsg">Попробуй ещё!</p>
+      <p class="streak">{{ counterLabel }}</p>
+      <p v-if="feedback === 'retry'" class="retryMsg">Попробуй ещё!</p>
     </template>
   </PageShell>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use "../styles/quiz";
+@use "../styles/mode-cards";
+
 button.modeReset {
   border: none;
   width: 100%;

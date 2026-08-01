@@ -3,7 +3,6 @@ import { computed } from "vue";
 import { RouterLink } from "vue-router";
 import PageShell from "../components/PageShell.vue";
 import { useLevelContent } from "../composables/useLevelContent";
-import modeStyles from "../styles/mode-cards.module.css";
 
 const {
   numbers,
@@ -54,20 +53,24 @@ const modes = computed(() => [
 
 <template>
   <PageShell title="Учить числа" back-to="/">
-    <nav :class="modeStyles.modes" aria-label="Учить числа">
+    <nav class="modes" aria-label="Учить числа">
       <RouterLink
         v-for="mode in modes"
         :key="mode.to"
         :to="mode.to"
         :class="[
-          modeStyles.mode,
-          modeStyles[mode.variant],
-          { [modeStyles.modePassed]: mode.passed },
+          'mode',
+          mode.variant,
+          { modePassed: mode.passed },
         ]"
       >
-        <span :class="modeStyles.modeTitle">{{ mode.title }}</span>
-        <span :class="modeStyles.modeSub">{{ mode.subtitle }}</span>
+        <span class="modeTitle">{{ mode.title }}</span>
+        <span class="modeSub">{{ mode.subtitle }}</span>
       </RouterLink>
     </nav>
   </PageShell>
 </template>
+
+<style scoped lang="scss">
+@use "../styles/mode-cards";
+</style>

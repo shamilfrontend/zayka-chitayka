@@ -1,36 +1,42 @@
 <script setup lang="ts">
+import { watch } from "vue";
 import { useRouter } from "vue-router";
 import BigButton from "../components/BigButton.vue";
 import BunnyMascot from "../components/BunnyMascot.vue";
 import PageShell from "../components/PageShell.vue";
-import type { Syllable } from "../data/syllables";
+import type { CapitalItem } from "../data/capitals";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { useQuizRound } from "../composables/useQuizRound";
-import { speakSyllablePrompt } from "../lib/speech";
+import { speakRussian } from "../lib/speech";
 
 const router = useRouter();
-const { syllables } = useLevelContent();
-const { learnSyllable } = useProgress();
+const { capitals } = useLevelContent();
+const { learnCapital, passSection } = useProgress();
 
 const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
-  useQuizRound<Syllable>({
-    pool: () => syllables.value,
-    getKey: (syllable) => syllable.text,
+  useQuizRound<CapitalItem>({
+    pool: () => capitals.value,
+    getKey: (item) => item.country,
     choiceCount: 4,
     sessionSize: 10,
     correctsPerLesson: 1,
-    onAsk: (syllable) => speakSyllablePrompt(syllable.text),
-    onCorrect: (syllable) => learnSyllable(syllable.text),
-    successPhrase: "Ура!",
-    idleVariant: "sky",
+    onAsk: (item) => speakRussian(`Какая столица ${item.country}?`),
+    onCorrect: (item) => learnCapital(item.country),
+    successPhrase: "Молодец!",
+    idleVariant: "peach",
     correctVariant: "mint",
-    retryVariant: "sky",
   });
+
+watch(done, (value) => {
+  if (value) {
+    passSection("capitals");
+  }
+});
 </script>
 
 <template>
-  <PageShell title="Найди слог" back-to="/syllables">
+  <PageShell title="Столицы стран" back-to="/learn/misc">
     <div v-if="done" class="done">
       <BunnyMascot size="md" mood="cheer" />
       <h2 class="doneTitle">Игра пройдена!</h2>
@@ -39,9 +45,9 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
         variant="mint"
         size="lg"
         full-width
-        @click="router.push('/syllables')"
+        @click="router.push('/learn/misc')"
       >
-        К урокам
+        К разделам
       </BigButton>
     </div>
 
@@ -58,26 +64,26 @@ const { round, feedback, done, goal, counterLabel, ask, pick, choiceVariant } =
           "
         />
         <p class="question">
-          Где слог <strong>{{ round.target.text }}</strong>?
+          Какая столица <strong>{{ round.target.country }}</strong>?
         </p>
         <BigButton variant="ghost" @click="ask">🔊 Ещё раз</BigButton>
       </div>
 
       <div :class="['grid', 'choices4']">
         <div
-          v-for="syllable in round.choices"
-          :key="syllable.text"
+          v-for="item in round.choices"
+          :key="item.country"
           class="choiceWrap"
         >
           <BigButton
-            size="xl"
-            full-width
-            :variant="choiceVariant(syllable)"
-            :aria-label="`Слог ${syllable.text}`"
+            size="lg"
+            :variant="choiceVariant(item)"
+            :aria-label="`Столица ${item.capital}`"
             :disabled="feedback === 'correct'"
-            @click="pick(syllable)"
+            full-width
+            @click="pick(item)"
           >
-            {{ syllable.text }}
+            {{ item.capital }}
           </BigButton>
         </div>
       </div>

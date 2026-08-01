@@ -21,11 +21,11 @@ alwaysApply: false
   <!-- разметка -->
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 /* стили */
 </style>
 ```
 
 - Не ставь `<template>` перед `<script>`.
-- Пропускай `<style>`, если стили вынесены в CSS Modules / отдельный файл.
+- Стили пиши в `<style scoped lang="scss">`. Общие стили подключай через `@use` из `src/styles/`.
 - Используй `<script setup lang="ts">`, если в проекте уже принят Composition API + TypeScript.

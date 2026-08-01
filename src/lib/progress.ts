@@ -13,10 +13,14 @@ export type MathSectionId =
   | "addition"
   | "subtraction";
 
-export type SectionId = ReadingSectionId | MathSectionId;
+export type MiscSectionId = "capitals";
+
+export type GlobalSectionId = MathSectionId | MiscSectionId;
+
+export type SectionId = ReadingSectionId | GlobalSectionId;
 
 type ReadingSectionsPassed = Partial<Record<ReadingSectionId, boolean>>;
-type MathSectionsPassed = Partial<Record<MathSectionId, boolean>>;
+type GlobalSectionsPassed = Partial<Record<GlobalSectionId, boolean>>;
 
 export interface LocaleReadingProgress {
   lettersLearned: string[];
@@ -29,7 +33,8 @@ export interface Progress {
   byLocale: Record<Locale, LocaleReadingProgress>;
   numbersLearned: string[];
   integersLearned: string[];
-  sectionsPassed: MathSectionsPassed;
+  capitalsLearned: string[];
+  sectionsPassed: GlobalSectionsPassed;
 }
 
 const READING_SECTION_IDS: ReadingSectionId[] = [
@@ -45,9 +50,16 @@ const MATH_SECTION_IDS: MathSectionId[] = [
   "subtraction",
 ];
 
+const MISC_SECTION_IDS: MiscSectionId[] = ["capitals"];
+
+const GLOBAL_SECTION_IDS: GlobalSectionId[] = [
+  ...MATH_SECTION_IDS,
+  ...MISC_SECTION_IDS,
+];
+
 const SECTION_IDS: SectionId[] = [
   ...READING_SECTION_IDS,
-  ...MATH_SECTION_IDS,
+  ...GLOBAL_SECTION_IDS,
 ];
 
 function emptyReadingProgress(): LocaleReadingProgress {
@@ -129,15 +141,15 @@ function parseReadingSectionsPassed(value: unknown): ReadingSectionsPassed {
   return result;
 }
 
-function parseMathSectionsPassed(value: unknown): MathSectionsPassed {
+function parseGlobalSectionsPassed(value: unknown): GlobalSectionsPassed {
   if (!value || typeof value !== "object") {
     return {};
   }
 
   const raw = value as Record<string, unknown>;
-  const result: MathSectionsPassed = {};
+  const result: GlobalSectionsPassed = {};
 
-  for (const section of MATH_SECTION_IDS) {
+  for (const section of GLOBAL_SECTION_IDS) {
     if (raw[section] === true) {
       result[section] = true;
       continue;
@@ -163,15 +175,15 @@ function parseMathSectionsPassed(value: unknown): MathSectionsPassed {
 /** Миграция со старого плоского формата + разделов по уровням */
 function parseSectionsForMigration(value: unknown): {
   reading: ReadingSectionsPassed;
-  math: MathSectionsPassed;
+  global: GlobalSectionsPassed;
 } {
   if (!value || typeof value !== "object") {
-    return { reading: {}, math: {} };
+    return { reading: {}, global: {} };
   }
 
   const raw = value as Record<string, unknown>;
   const reading: ReadingSectionsPassed = {};
-  const math: MathSectionsPassed = {};
+  const global: GlobalSectionsPassed = {};
 
   for (const section of SECTION_IDS) {
     let passed = raw[section] === true;
@@ -195,11 +207,11 @@ function parseSectionsForMigration(value: unknown): {
     if (isReadingSection(section)) {
       reading[section] = true;
     } else {
-      math[section] = true;
+      global[section] = true;
     }
   }
 
-  return { reading, math };
+  return { reading, global };
 }
 
 function parseLocaleReading(
@@ -235,6 +247,7 @@ export function loadProgress(): Progress {
         },
         numbersLearned: [],
         integersLearned: [],
+        capitalsLearned: [],
         sectionsPassed: {},
       };
     }
@@ -251,7 +264,8 @@ export function loadProgress(): Progress {
         },
         numbersLearned: parseNumbersLearned(parsed.numbersLearned),
         integersLearned: parseIntegersLearned(parsed.integersLearned),
-        sectionsPassed: parseMathSectionsPassed(parsed.sectionsPassed),
+        capitalsLearned: parseStringList(parsed.capitalsLearned),
+        sectionsPassed: parseGlobalSectionsPassed(parsed.sectionsPassed),
       };
     }
 
@@ -270,7 +284,8 @@ export function loadProgress(): Progress {
       },
       numbersLearned: parseNumbersLearned(parsed.numbersLearned),
       integersLearned: parseIntegersLearned(parsed.integersLearned),
-      sectionsPassed: migrated.math,
+      capitalsLearned: parseStringList(parsed.capitalsLearned),
+      sectionsPassed: migrated.global,
     };
   } catch {
     return {
@@ -280,6 +295,7 @@ export function loadProgress(): Progress {
       },
       numbersLearned: [],
       integersLearned: [],
+      capitalsLearned: [],
       sectionsPassed: {},
     };
   }
@@ -425,6 +441,17 @@ export function markIntegerLearned(text: string): Progress {
   return progress;
 }
 
+export function markCapitalLearned(country: string): Progress {
+  const progress = loadProgress();
+
+  if (!progress.capitalsLearned.includes(country)) {
+    progress.capitalsLearned = [...progress.capitalsLearned, country];
+    saveProgress(progress);
+  }
+
+  return progress;
+}
+
 export function resetProgress(): Progress {
   const next: Progress = {
     byLocale: {
@@ -433,6 +460,7 @@ export function resetProgress(): Progress {
     },
     numbersLearned: [],
     integersLearned: [],
+    capitalsLearned: [],
     sectionsPassed: {},
   };
   saveProgress(next);

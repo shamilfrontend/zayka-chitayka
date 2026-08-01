@@ -8,7 +8,6 @@ import { useLearnDeck } from "../composables/useLearnDeck";
 import { useLevelContent } from "../composables/useLevelContent";
 import { useProgress } from "../composables/useProgress";
 import { speakRussian } from "../lib/speech";
-import styles from "./Learn.module.css";
 
 const router = useRouter();
 const { learnWord, reading } = useProgress();
@@ -29,10 +28,10 @@ const word = computed(() => item.value!);
 
 <template>
   <PageShell title="Слова" back-to="/learn/words">
-    <div v-if="showOffer" :class="styles.offer">
+    <div v-if="showOffer" class="offer">
       <BunnyMascot size="md" mood="cheer" />
-      <h2 :class="styles.offerTitle">Пора проверить!</h2>
-      <p :class="styles.offerText">
+      <h2 class="offerTitle">Пора проверить!</h2>
+      <p class="offerText">
         Ты посмотрел все слова. Пройди тест, чтобы сдать раздел.
       </p>
       <BigButton
@@ -49,32 +48,32 @@ const word = computed(() => item.value!);
     </div>
 
     <template v-else>
-      <div :class="styles.cardWrap">
+      <div class="cardWrap">
         <button
           :key="word.text"
           type="button"
-          :class="styles.wordCard"
+          class="wordCard"
           :aria-label="`Слово ${word.text}, произнести`"
           @click="speakRussian(word.hint)"
         >
-          <span :class="styles.emoji" aria-hidden="true">{{ word.emoji }}</span>
-          <span :class="styles.wordText">{{ word.text }}</span>
-          <div :class="styles.syllables">
+          <span class="emoji" aria-hidden="true">{{ word.emoji }}</span>
+          <span class="wordText">{{ word.text }}</span>
+          <div class="syllables">
             <span
               v-for="(part, i) in word.syllables"
               :key="`${part}-${i}`"
-              :class="styles.syllableChip"
+              class="syllableChip"
             >
               {{ part }}
             </span>
           </div>
-          <span v-if="learned" :class="styles.badge">✓</span>
+          <span v-if="learned" class="badge">✓</span>
         </button>
       </div>
 
-      <p :class="styles.counter">{{ index + 1 }} / {{ words.length }}</p>
+      <p class="counter">{{ index + 1 }} / {{ words.length }}</p>
 
-      <div :class="styles.row">
+      <div class="row">
         <BigButton variant="cream" aria-label="Предыдущее" @click="goPrev">
           ←
         </BigButton>
@@ -86,7 +85,7 @@ const word = computed(() => item.value!);
         </BigButton>
       </div>
 
-      <div :class="styles.quizLink">
+      <div class="quizLink">
         <BigButton
           v-if="readyForTest"
           variant="peach"
@@ -108,3 +107,7 @@ const word = computed(() => item.value!);
     </template>
   </PageShell>
 </template>
+
+<style scoped lang="scss">
+@use "../styles/learn";
+</style>

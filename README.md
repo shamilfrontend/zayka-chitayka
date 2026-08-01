@@ -50,7 +50,7 @@ Workflow: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
 ## Стек
 
-Vue 3, TypeScript, Vite, Vue Router, CSS Modules, vite-plugin-pwa.
+Vue 3, TypeScript, Vite, Vue Router, scoped SCSS, vite-plugin-pwa.
 
 ## Для ребёнка
 
